@@ -56,6 +56,11 @@ namespace FileVisitor
             OnStarted();
             foreach (var file in IterateThroughDirectories(directoryPath))
             {
+                if (_isAborted)
+                {
+                    yield break;
+                }
+
                 yield return file;
             }
 

@@ -7,24 +7,33 @@ namespace FileVisitor.Demo
     {
         public static void Main(string[] args)
         {
-            //if (args.Length != 1)
-            //    throw new ArgumentException("Provide path to the root directory.");
+            if (args.Length != 1)
+            {
+                throw new ArgumentException("Provide path to the root directory.");
+            }
 
-            var directoryPath = "C:\\Users\\Vadzim_Kurdzesau\\source\\repos\\Learning\\MentoringProgram\\Fundamentals" /*args[0]*/;
             var fileSystemVisitor = new FileSystemVisitor();
             fileSystemVisitor.Started += (_, _) => Console.WriteLine("Search started.");
             fileSystemVisitor.Finished += (_, _) => Console.WriteLine("Search finished.");
-            fileSystemVisitor.DirectoryFound += OnDirectoryFound;
+
             fileSystemVisitor.FileFound += OnFileFound;
-            var content = fileSystemVisitor.GetDirectoryContent(directoryPath);
+            fileSystemVisitor.DirectoryFound += OnDirectoryFound;
+
+            var content = fileSystemVisitor.GetDirectoryContent(args[0]);
 
             var result = content.ToList();
         }
 
         private static void OnDirectoryFound(object sender, FileSystemVisitorDirectoryEventArgs eventArgs, ref bool abort, ref bool exclude)
         {
-            exclude = true;
-            Console.WriteLine($"Excluded directory: '{eventArgs.DirectoryInfo.FullName}'");
+            if (eventArgs.DirectoryInfo.Name.Equals(".vs") || eventArgs.DirectoryInfo.Name.Equals(".git"))
+            {
+                exclude = true;
+                Console.WriteLine($"Excluded directory: '{eventArgs.DirectoryInfo.FullName}'");
+                return;
+            }
+
+            Console.WriteLine($"Found file: '{eventArgs.DirectoryInfo.FullName}'");
         }
 
         private static void OnFileFound(object sender, FileSystemVisitorFileEventArgs eventArgs, ref bool abort, ref bool exclude)
