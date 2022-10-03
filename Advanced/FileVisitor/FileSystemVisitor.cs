@@ -17,6 +17,9 @@ namespace FileVisitor
             _filter = filter ?? throw new ArgumentNullException(nameof(filter));
         }
 
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="directoryPath"/> is null, empty or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown if directoty <paramref name="directoryPath"/> does not exitst.</exception>
         public IEnumerable<FileSystemInfo> GetDirectoryContent(string directoryPath)
         {
             if (string.IsNullOrWhiteSpace(directoryPath))
