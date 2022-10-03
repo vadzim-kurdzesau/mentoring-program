@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace FileVisitor
 {
-    public class FileSystemVisitorFileEventArgs
+    public class FileSystemVisitorFileEventArgs : EventArgs
     {
         public FileInfo FileInfo { get; set; }
     }
