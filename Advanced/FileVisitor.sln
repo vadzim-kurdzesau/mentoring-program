@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileVisitor.Demo", "FileVisitor.Demo\FileVisitor.Demo.csproj", "{7BDDA296-5CDD-4A19-BA37-599B32D7B9CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileVisitor", "FileVisitor\FileVisitor.csproj", "{8917E0CD-C32E-4026-98EB-193543D4AB08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileVisitor", "FileVisitor\FileVisitor.csproj", "{8917E0CD-C32E-4026-98EB-193543D4AB08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileVisitor.Tests", "FileVisitor.Tests\FileVisitor.Tests.csproj", "{901412DD-1A60-4974-A26F-822E038B62C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8917E0CD-C32E-4026-98EB-193543D4AB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8917E0CD-C32E-4026-98EB-193543D4AB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8917E0CD-C32E-4026-98EB-193543D4AB08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{901412DD-1A60-4974-A26F-822E038B62C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{901412DD-1A60-4974-A26F-822E038B62C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{901412DD-1A60-4974-A26F-822E038B62C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{901412DD-1A60-4974-A26F-822E038B62C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

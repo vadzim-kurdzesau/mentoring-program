@@ -12,7 +12,7 @@ namespace FileVisitor.Demo
                 throw new ArgumentException("Provide path to the root directory.");
             }
 
-            var fileSystemVisitor = new FileSystemVisitor();
+            var fileSystemVisitor = new FileSystemVisitor(i => i.Name.Equals(".git"));
             fileSystemVisitor.Started += (_, _) => Console.WriteLine("Search started.");
             fileSystemVisitor.Finished += (_, _) => Console.WriteLine("Search finished.");
 
@@ -26,7 +26,7 @@ namespace FileVisitor.Demo
 
         private static void OnDirectoryFound(object sender, FileSystemVisitorDirectoryEventArgs eventArgs, ref bool abort, ref bool exclude)
         {
-            if (eventArgs.DirectoryInfo.Name.Equals(".vs") || eventArgs.DirectoryInfo.Name.Equals(".git"))
+            if (eventArgs.DirectoryInfo.Name.Equals(".vs"))
             {
                 exclude = true;
                 Console.WriteLine($"Excluded directory: '{eventArgs.DirectoryInfo.FullName}'");
