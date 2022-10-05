@@ -1,4 +1,5 @@
-﻿using Task3.DoNotChange;
+﻿using System;
+using Task3.DoNotChange;
 
 namespace Task3
 {
@@ -13,30 +14,16 @@ namespace Task3
 
         public bool AddTaskForUser(int userId, string description, IResponseModel model)
         {
-            string message = GetMessageForModel(userId, description);
-            if (message != null)
+            try
             {
-                model.AddAttribute("action_result", message);
+                _taskService.AddTaskForUser(userId, new UserTask(description));
+                return true;
+            }
+            catch (ArgumentException ex)
+            {
+                model.AddAttribute("action_result", ex.Message);
                 return false;
             }
-
-            return true;
-        }
-
-        private string GetMessageForModel(int userId, string description)
-        {
-            var task = new UserTask(description);
-            int result = _taskService.AddTaskForUser(userId, task);
-            if (result == -1)
-                return "Invalid userId";
-
-            if (result == -2)
-                return "User not found";
-
-            if (result == -3)
-                return "The task already exists";
-
-            return null;
         }
     }
 }
