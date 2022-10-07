@@ -10,28 +10,13 @@ namespace Tasks
     {
         private int _length = 0;
         private ListNode _head;
+        private ListNode _tail;
 
         public int Length => _length;
 
         public void Add(T e)
         {
-            var newNode = new ListNode(e);
-            var temp = _head;
-            _length++;
-
-            if (_head == null)
-            {
-                _head = newNode;
-                return;
-            }
-
-            while (temp.Next != null)
-            {
-                temp = temp.Next;
-            }
-
-            temp.Next = newNode;
-            newNode.Previous = temp;
+            AddAt(_length, e);
         }
 
         public void AddAt(int index, T e)
@@ -42,52 +27,39 @@ namespace Tasks
             if (_head == null)
             {
                 _head = newNode;
+                _tail = newNode;
                 return;
             }
 
             if (index == 0)
             {
-                newNode.Next = _head;
-                newNode.Next.Previous = newNode;
+                InsertBefore(_head, newNode);
                 _head = newNode;
                 return;
             }
 
-            var count = 0;
-            var temp = _head;
-            while (count < index && temp.Next != null)
+            if (index == _length - 1)
             {
-                temp = temp.Next;
-                count++;
+                InsertAfter(_tail, newNode);
+                _tail = newNode;
+                return;
             }
 
-            newNode.Next = temp.Next;
-            newNode.Previous = temp;
-            if (temp.Previous != null)
-            {
-                temp.Previous.Next = newNode;
-            }
-            temp.Next = newNode;
+            var temp = GetNodeAt(index);
+            InsertBefore(temp, newNode);
         }
 
         public T ElementAt(int index)
         {
             ValidateIndex(index);
 
-            var count = 0;
-            var temp = _head;
-            while (count < index && temp.Next != null)
-            {
-                temp = temp.Next;
-                count++;
-            }
-
+            var temp = GetNodeAt(index);
             return temp.Value;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new Enumerator(_head);
+            return new Enumerator(this);
         }
 
         public void Remove(T item)
@@ -121,20 +93,14 @@ namespace Tasks
         {
             ValidateIndex(index);
 
-            ListNode temp = _head;
+            var temp = _head;
             if (index == 0)
             {
                 _head = null;
                 return temp.Value;
             }
 
-            var count = 0;
-            while (count < index && temp.Next != null)
-            {
-                temp = temp.Next;
-                count++;
-            }
-
+            temp = GetNodeAt(index);
             RemoveNode(temp);
             return temp.Value;
         }
@@ -155,7 +121,43 @@ namespace Tasks
         private void RemoveNode(ListNode node)
         {
             node.Previous.Next = node.Next;
+            node.Next.Previous = node.Previous;
             _length--;
+        }
+
+        private ListNode GetNodeAt(int index)
+        {
+            var count = 0;
+            var temp = _head;
+            while (count < index && temp.Next != null)
+            {
+                temp = temp.Next;
+                count++;
+            }
+
+            return temp;
+        }
+
+        private static void InsertBefore(ListNode before, ListNode value)
+        {
+            value.Next = before;
+            if (before.Previous != null)
+            {
+                before.Previous.Next = value;
+            }
+
+            before.Previous = value;
+        }
+
+        private static void InsertAfter(ListNode after, ListNode value)
+        {
+            value.Previous = after;
+            if (after.Next != null)
+            {
+                after.Next.Previous = value;
+            }
+
+            after.Next = value;
         }
 
         private class ListNode : IEquatable<T>
@@ -179,12 +181,14 @@ namespace Tasks
 
         private class Enumerator : IEnumerator<T>
         {
-            private readonly ListNode _head;
+            private readonly int _initialLength;
+            private readonly DoublyLinkedList<T> _list;
             private ListNode _current;
 
-            public Enumerator(ListNode head)
+            public Enumerator(DoublyLinkedList<T> list)
             {
-                _head = head;
+                _list = list;
+                _initialLength = list.Length;
                 _current = null;
             }
 
@@ -199,14 +203,19 @@ namespace Tasks
 
             public bool MoveNext()
             {
-                if (_head == null)
+                if (_list == null)
                 {
                     return false;
                 }
 
+                if (_initialLength != _list.Length)
+                {
+                    throw new InvalidOperationException("Cannot modify the list during the enumeration.");
+                }
+
                 if (_current == null)
                 {
-                    _current = _head;
+                    _current = _list._head;
                     return true;
                 }
 
