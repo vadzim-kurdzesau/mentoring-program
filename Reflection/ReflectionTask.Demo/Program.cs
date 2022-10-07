@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using ReflectionTask.Demo.Attributes;
-using System.Reflection;
+﻿using ReflectionTask.Demo.Attributes;
 using System;
+using System.Configuration;
 
 namespace ReflectionTask.Demo
 {
@@ -9,27 +8,28 @@ namespace ReflectionTask.Demo
     {
         private static void Main()
         {
-            var user = new UserInfo();
-            foreach (var property in typeof(UserInfo).GetProperties())
+            var appSettings = ConfigurationManager.AppSettings;
+            var cl = new MyClass();
+
+            foreach (var item in appSettings.AllKeys)
             {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(FileConfigurationItemAttribute)) as FileConfigurationItemAttribute;
-
-                if (attribute != null)
-                {
-                    var config = new ConfigurationBuilder()
-                        .AddJsonFile(attribute.ConfigFilePath).Build();
-
-                    user.Username = config[attribute.SettingName];
-                }
+                Console.WriteLine(item);
             }
 
-            Console.WriteLine(user.Username);
+            foreach (var property in typeof(MyClass).GetProperties())
+            {
+                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), true) as ConfigurationComponentBaseAttribute;
+                if (attribute != null)
+                {
+                    Console.WriteLine(attribute.SettingName);
+                }
+            }
         }
-    }
 
-    public class UserInfo
-    {
-        [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "username")]
-        public string Username { get; set; }
+        class MyClass
+        {
+            [ConfigurationManagerConfigurationItem("Username")]
+            public int MyProperty { get; set; }
+        }
     }
 }
