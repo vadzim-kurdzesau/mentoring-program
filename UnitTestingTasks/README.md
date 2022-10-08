@@ -27,3 +27,11 @@ More tests
 * Negative index value not allowed [>0]
 * Size limit is must if not supplied make 5 as default [0-4]
 * List can be non-sizable means without upper limit list can be created [Hint-try property or constructor initializers]
+
+## String Sum Kata 
+
+* Write a simple String Sum utility with a function <em>string Sum(string num1, string num2)</em>, which can accept only natural numbers and will return their sum. Replace entered number with <em>0 (zero)</em> if entered number is not a natural number.
+* Stat with a simplest test case with an empty string
+* Create a simple method <em>string Sum(string num1, string num2)</em>
+* Write a test to pass small numbers and refactor, if test passed
+* try to write more code and refactor
