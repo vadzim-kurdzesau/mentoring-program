@@ -59,7 +59,7 @@ namespace UnitTestingTasks.Tests
             list.Add(existingString);
 
             var actualFirst = list[0];
-            Assert.Equal(existingString, anotherString);
+            Assert.Equal(existingString, actualFirst);
         }
 
         [Fact]
@@ -73,6 +73,7 @@ namespace UnitTestingTasks.Tests
 
             var actualFirst = list[0];
             var actualLast = list[1];
+            Assert.Equal(capacity, list.Length);
             Assert.Equal(newString, actualFirst);
             Assert.Equal(anotherString, actualLast);
         }
