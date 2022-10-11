@@ -10,4 +10,7 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
-:r .\PostDeploy.sql
+IF '$(IsTheFirstDeployment)' = '1'
+BEGIN
+    :r .\PostDeploy.sql
+END
