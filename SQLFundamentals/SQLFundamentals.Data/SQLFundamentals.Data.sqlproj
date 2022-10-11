@@ -60,6 +60,7 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Views" />
     <Folder Include="Procedures" />
+    <Folder Include="Triggers" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PostDeploy.sql" />
@@ -74,6 +75,7 @@
   <ItemGroup>
     <Build Include="dbo\Views\EmployeeInfo.sql" />
     <Build Include="Procedures\InsertEmployeeProcedure.sql" />
+    <Build Include="Triggers\EmployeeOnInsertTrigger.sql" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="IsTheFirstDeployment">

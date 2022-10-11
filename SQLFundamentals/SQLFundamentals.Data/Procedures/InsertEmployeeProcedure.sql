@@ -9,6 +9,10 @@
 	@State NVARCHAR(50) = NULL,
 	@ZipCode NVARCHAR(50) = NULL
 AS
+	-- Validate parameters
+	IF TRIM(ISNULL(@EmployeeName, '')) = '' AND TRIM(ISNULL(@FirstName, '')) = '' AND TRIM(ISNULL(@LastName, '')) = ''
+		THROW 70001, 'At least one of these parameters must be not null, empty or a whitespace: @EmployeeName, @FirstName, @LastName.', 1;
+
 	-- Insert address
 	DECLARE @AddressId AS INT
 	INSERT INTO [dbo].[Address](City, Street, State, ZipCode)
