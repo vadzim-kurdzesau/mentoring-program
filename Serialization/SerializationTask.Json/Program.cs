@@ -7,7 +7,7 @@ namespace SerializationTask.Json
         public static void Main()
         {
             // Arrange
-            const string serializationFileName = "SerializedJsonDepartment.txt";
+            const string serializationFileName = "SerializedJsonDepartment.json";
             var department = new Department
             {
                 DepartmentName = "TestDepartment",
