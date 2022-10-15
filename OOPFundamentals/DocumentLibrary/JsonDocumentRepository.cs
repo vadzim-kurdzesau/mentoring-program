@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
@@ -23,7 +22,11 @@ namespace DocumentLibrary
             var filePath = GetPathToDocument(document);
             using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
             {
-                SerializeToStream(fileStream, document);
+                var serializedDocument = JsonConvert.SerializeObject(document, serializerSettings);
+                using (var streamWriter = new StreamWriter(fileStream, Encoding.UTF8))
+                {
+                    streamWriter.Write(serializedDocument);
+                }
             }
         }
 
@@ -46,15 +49,6 @@ namespace DocumentLibrary
         private string GetPathToDocument(Document document)
         {
             return Path.Combine(_directoryPath, $"{document.GetType().Name}_#{document.DocumentId}.json");
-        }
-
-        private static void SerializeToStream(Stream stream, Document document)
-        {
-            var serializedDocument = JsonConvert.SerializeObject(document, serializerSettings);
-            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8))
-            {
-                streamWriter.Write(serializedDocument);
-            }
         }
     }
 }
