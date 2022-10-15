@@ -43,20 +43,6 @@ namespace DocumentLibrary
             }
         }
 
-        public void Update(Document document)
-        {
-            var filePath = GetPathToDocument(document);
-            using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
-            {
-                SerializeToStream(fileStream, document);
-            }
-        }
-
-        public void Delete(int documentNumber)
-        {
-            throw new NotImplementedException();
-        }
-
         private string GetPathToDocument(Document document)
         {
             return Path.Combine(_directoryPath, $"{document.GetType().Name}_#{document.DocumentId}.json");

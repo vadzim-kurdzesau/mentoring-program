@@ -14,15 +14,5 @@ namespace DocumentLibrary
         /// Gets the <see cref="Document"/> with specified <paramref name="documentNumber"/>.
         /// </summary>
         public IEnumerable<Document> Get(int documentNumber);
-
-        /// <summary>
-        /// Updates the specified <paramref name="document"/> in storage.
-        /// </summary>
-        public void Update(Document document);
-
-        /// <summary>
-        /// Deletes the <see cref="Document"/> with specified <paramref name="documentNumber"/>.
-        /// </summary>
-        public void Delete(int documentNumber);
     }
 }
