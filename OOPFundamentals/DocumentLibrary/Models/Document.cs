@@ -9,4 +9,6 @@ public abstract class Document
     public string Title { get; set; }
 
     public DateTime PublicationDate { get; set; }
+
+    public abstract string GetInfo();
 }

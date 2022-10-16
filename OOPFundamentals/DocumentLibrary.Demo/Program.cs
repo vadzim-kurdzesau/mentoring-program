@@ -1,35 +1,32 @@
 ﻿using DocumentLibrary;
 using DocumentLibrary.Models;
 
-var repository = new JsonDocumentRepository(@"C:\Users\Vadzim_Kurdzesau\source\repos\Test");
+namespace DocumentLibrary.Demo;
 
-var book = new Book()
+internal class Program
 {
-    DocumentId = 1,
-    Title = "TestBook1",
-    ISBN = "123456789",
-    NumberOfPages = 100,
-    PublicationDate = DateTime.Now,
-    Publisher = "TestPublisher1",
-    Authors = new[] { "Vadzim" }
-};
+    public static void Main(string[] args)
+    {
+        if (args.Length < 1)
+        {
+            throw new ArgumentException("Specify the path to the storage directory.");
+        }
 
-var localizedBook = new LocalizedBook()
-{
-    DocumentId = 1,
-    Title = "TestLocalizedBook1",
-    ISBN = "123456789_B",
-    NumberOfPages = 105,
-    PublicationDate = DateTime.Now,
-    Publisher = "TestPublisher1",
-    Authors = new[] { "Vadzim" },
-    LocalizationCountry = "Belarus",
-    LocalPublisher = "TestLocalizedPublisher1"
-};
+        var directoryPath = args[0];
+        var repository = new JsonDocumentRepository(directoryPath);
+        while (true)
+        {
+            Console.WriteLine("Specify the document number.");
+            if (!int.TryParse(Console.ReadLine(), out int documentNumber))
+            {
+                throw new ArgumentException("Specify the integer document number.");
+            }
 
-repository.Add(book);
-repository.Add(localizedBook);
-
-var books = repository.Get(book.DocumentId).ToList();
-
-var a = 5;
+            var documents = repository.Get(documentNumber);
+            foreach (var document in documents)
+            {
+                Console.WriteLine(document.GetInfo());
+            }
+        }
+    }
+}
