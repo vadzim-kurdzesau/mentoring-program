@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Task1.DoNotChange;
 
 namespace Task1
@@ -8,7 +9,7 @@ namespace Task1
     {
         public static IEnumerable<Customer> Linq1(IEnumerable<Customer> customers, decimal limit)
         {
-            throw new NotImplementedException();
+            return customers.Where(c => c.Orders.Sum(o => o.Total) > limit);
         }
 
         public static IEnumerable<(Customer customer, IEnumerable<Supplier> suppliers)> Linq2(
@@ -16,7 +17,7 @@ namespace Task1
             IEnumerable<Supplier> suppliers
         )
         {
-            throw new NotImplementedException();
+            return customers.Select(c => (c, suppliers.Where(s => s.Country.Equals(c.Country) && s.City.Equals(c.City))));
         }
 
         public static IEnumerable<(Customer customer, IEnumerable<Supplier> suppliers)> Linq2UsingGroup(
@@ -29,21 +30,26 @@ namespace Task1
 
         public static IEnumerable<Customer> Linq3(IEnumerable<Customer> customers, decimal limit)
         {
-            throw new NotImplementedException();
+            return customers.Where(c => c.Orders.Sum(o => o.Total) > limit);
         }
 
         public static IEnumerable<(Customer customer, DateTime dateOfEntry)> Linq4(
             IEnumerable<Customer> customers
         )
         {
-            throw new NotImplementedException();
+            return customers.Where(c => c.Orders.Any()).Select(c => (c, c.Orders.First().OrderDate));
         }
 
         public static IEnumerable<(Customer customer, DateTime dateOfEntry)> Linq5(
             IEnumerable<Customer> customers
         )
         {
-            throw new NotImplementedException();
+            return customers.Where(c => c.Orders.Any())
+                .Select(customer => (customer, customer.Orders.First().OrderDate))
+                .OrderBy(c => c.OrderDate.Year)
+                .OrderBy(c => c.OrderDate.Month);
+                //.OrderByDescending(c => c.customer.Orders.Sum(o => o.Total))
+                //.OrderBy(c => c.customer.CompanyName);
         }
 
         public static IEnumerable<Customer> Linq6(IEnumerable<Customer> customers)
@@ -86,7 +92,12 @@ namespace Task1
 
         public static string Linq10(IEnumerable<Supplier> suppliers)
         {
-            throw new NotImplementedException();
+            var countryNames = suppliers.Select(s => s.Country)
+                .Distinct()
+                .OrderBy(n => n.Length)
+                .ThenBy(n => n);
+
+            return string.Concat(countryNames);
         }
     }
 }
