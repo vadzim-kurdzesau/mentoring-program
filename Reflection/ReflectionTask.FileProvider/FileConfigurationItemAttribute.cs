@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using ReflectionTask.Demo;
 using System.Text.Json;
 
-namespace ReflectionTask.Demo.Attributes
+namespace ReflectionTask.FileProvider
 {
     /// <summary>
     /// Sets a value from the JSON configuration file to the decorated property.

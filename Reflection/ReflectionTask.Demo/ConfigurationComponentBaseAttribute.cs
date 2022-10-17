@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ReflectionTask.Demo.Attributes
+namespace ReflectionTask.Demo
 {
     /// <summary>
     /// Sets a value from the configuration to the decorated property.

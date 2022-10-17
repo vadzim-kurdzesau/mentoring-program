@@ -1,5 +1,4 @@
-﻿using ReflectionTask.Demo.Attributes;
-using System;
+﻿using System;
 using System.Configuration;
 
 namespace ReflectionTask.Demo
@@ -32,7 +31,7 @@ namespace ReflectionTask.Demo
         class MyClass
         {
             //[ConfigurationManagerConfigurationItem("Username")]
-            [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Username")]
+            //[FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Username")]
             public string MyProperty { get; set; }
         }
     }

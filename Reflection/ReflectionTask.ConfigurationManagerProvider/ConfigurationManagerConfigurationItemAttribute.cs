@@ -1,6 +1,7 @@
-﻿using System.Configuration;
+﻿using ReflectionTask.Demo;
+using System.Configuration;
 
-namespace ReflectionTask.Demo.Attributes
+namespace ReflectionTask.ConfigurationManagerProvider
 {
     /// <summary>
     /// Sets a value to decorated property from the configuration manager.
