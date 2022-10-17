@@ -23,13 +23,17 @@ namespace ReflectionTask.Demo
                 {
                     Console.WriteLine(attribute.SettingName);
                 }
+
+                property.SetValue(cl, attribute.LoadSettings());
+                attribute.SaveSettings("UPDATED");
             }
         }
 
         class MyClass
         {
-            [ConfigurationManagerConfigurationItem("Username")]
-            public int MyProperty { get; set; }
+            //[ConfigurationManagerConfigurationItem("Username")]
+            [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Username")]
+            public string MyProperty { get; set; }
         }
     }
 }

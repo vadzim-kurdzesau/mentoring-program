@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace ReflectionTask.Demo.Attributes
 {
@@ -14,7 +13,7 @@ namespace ReflectionTask.Demo.Attributes
         /// </summary>
         public string SettingName { get; }
 
-        public ConfigurationComponentBaseAttribute(string settingName, [CallerMemberName] string propertyName = null)
+        public ConfigurationComponentBaseAttribute(string settingName)
         {
             if (string.IsNullOrWhiteSpace(settingName))
             {
@@ -22,17 +21,16 @@ namespace ReflectionTask.Demo.Attributes
             }
 
             SettingName = settingName;
-            Console.WriteLine(propertyName ?? "No value specified");
         }
 
         /// <summary>
-        /// Gets the value on specified setting key from configuration.
+        /// Loads the value on specified setting key from configuration.
         /// </summary>
-        public abstract string GetValue();
+        public abstract string LoadSettings();
 
         /// <summary>
-        /// Sets the value on specified setting key to configuration.
+        /// Saves the <paramref name="value"/> on specified setting key to configuration.
         /// </summary>
-        public abstract void SetValue(string value);
+        public abstract void SaveSettings(string value);
     }
 }
