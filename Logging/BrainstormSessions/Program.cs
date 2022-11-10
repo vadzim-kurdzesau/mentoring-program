@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Sinks.EmailPickup;
 
 namespace BrainstormSessions
 {
@@ -9,6 +10,13 @@ namespace BrainstormSessions
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
+                .WriteTo.EmailPickup(
+                    fromEmail: "testEmail@test.com",
+                    toEmail: "Vadzim_Kurdzesau@epam.com",
+                    pickupDirectory: @"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Logging\BrainstormSessions\Logs\Emailpickup\",
+                    subject: "Log",
+                    fileExtension: ".email"
+                )
                 .CreateLogger();
             CreateHostBuilder(args).Build().Run();
         }
