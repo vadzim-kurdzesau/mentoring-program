@@ -1,7 +1,9 @@
-﻿using ReflectionTask.Demo;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 
-namespace ReflectionTask.FileProvider
+namespace ReflectionTask.Demo.Attributes
 {
     /// <summary>
     /// Sets a value from the JSON configuration file to the decorated property.
@@ -18,6 +20,8 @@ namespace ReflectionTask.FileProvider
         /// </summary>
         public string ConfigurationFilePath { get; }
 
+        public override ConfigurationProviderType ProviderType => ConfigurationProviderType.Manager;
+
         public FileConfigurationItemAttribute(string configFilePath, string settingName)
             : base(settingName)
         {
@@ -29,7 +33,7 @@ namespace ReflectionTask.FileProvider
             ConfigurationFilePath = configFilePath;
         }
 
-        public override string LoadSettings()
+        public string LoadSettings()
         {
             if (!File.Exists(ConfigurationFilePath))
             {
@@ -45,7 +49,7 @@ namespace ReflectionTask.FileProvider
             return value;
         }
 
-        public override void SaveSettings(string value)
+        public void SaveSettings(string value)
         {
             var configuration = GetConfiguration();
             if (!configuration.ContainsKey(SettingName))

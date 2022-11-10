@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 
 namespace ReflectionTask.Demo
 {
@@ -7,32 +6,15 @@ namespace ReflectionTask.Demo
     {
         private static void Main()
         {
-            var appSettings = ConfigurationManager.AppSettings;
-            var cl = new MyClass();
+            var configuration = new Configuration(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\Plugins");
 
-            foreach (var item in appSettings.AllKeys)
-            {
-                Console.WriteLine(item);
-            }
+            configuration.LoadSettings();
 
-            foreach (var property in typeof(MyClass).GetProperties())
-            {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), true) as ConfigurationComponentBaseAttribute;
-                if (attribute != null)
-                {
-                    Console.WriteLine(attribute.SettingName);
-                }
+            configuration.Username = "Vadzim";
 
-                property.SetValue(cl, attribute.LoadSettings());
-                attribute.SaveSettings("UPDATED");
-            }
-        }
+            configuration.SaveSettings();
 
-        class MyClass
-        {
-            //[ConfigurationManagerConfigurationItem("Username")]
-            //[FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Username")]
-            public string MyProperty { get; set; }
+            Console.WriteLine($"{configuration.Username}: {configuration.Password}");
         }
     }
 }
