@@ -9,15 +9,6 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.EmailPickup(
-                    fromEmail: "testEmail@test.com",
-                    toEmail: "Vadzim_Kurdzesau@epam.com",
-                    pickupDirectory: @"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Logging\BrainstormSessions\Logs\Emailpickup\",
-                    subject: "Log",
-                    fileExtension: ".email"
-                )
-                .CreateLogger();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -26,6 +17,14 @@ namespace BrainstormSessions
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
                     loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
+                    loggerConfiguration.WriteTo.EmailPickup(
+                        fromEmail: "testEmail@test.com",
+                        toEmail: "Vadzim_Kurdzesau@epam.com",
+                        pickupDirectory: @"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Logging\BrainstormSessions\Logs\Emailpickup\",
+                        subject: "Log",
+                        fileExtension: ".email",
+                        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug
+                    );
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
