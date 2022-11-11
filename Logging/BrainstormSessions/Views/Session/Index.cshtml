@@ -63,7 +63,7 @@
                     console.log("add idea: " + newIdea.name() + " desc: " + newIdea.description());
                     self.ideas.push(newIdea);
                     $.ajax({
-                        url: '/api/ideas/create',
+                        url: '/create',
                         type: 'POST',
                         data: ko.toJSON(newIdea),
                         contentType: 'application/json'
@@ -76,7 +76,7 @@
         ko.applyBindings(viewModel);
         $(function() {
             $.ajax({
-                url: '/api/ideas/forsession/@Model.Id',
+                url: '/forsession/@Model.Id',
                 dataType: 'json',
                 success: function(data) {
                     if (data instanceof Array) {

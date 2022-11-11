@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration;
+using System.IO;
 
 namespace ReflectionTask.Demo
 {
@@ -7,32 +7,28 @@ namespace ReflectionTask.Demo
     {
         private static void Main()
         {
-            var appSettings = ConfigurationManager.AppSettings;
-            var cl = new MyClass();
+            var pluginsFolderPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Plugins");
 
-            foreach (var item in appSettings.AllKeys)
-            {
-                Console.WriteLine(item);
-            }
+            var configuration = new Configuration(pluginsFolderPath);
 
-            foreach (var property in typeof(MyClass).GetProperties())
-            {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), true) as ConfigurationComponentBaseAttribute;
-                if (attribute != null)
-                {
-                    Console.WriteLine(attribute.SettingName);
-                }
+            configuration.LoadSettings();
 
-                property.SetValue(cl, attribute.LoadSettings());
-                attribute.SaveSettings("UPDATED");
-            }
+            PrintConfiguration(configuration);
+
+            Console.Write("New password: ");
+            configuration.Password = Console.ReadLine();
+
+            Console.Write("New balance: ");
+            configuration.Balance = float.Parse(Console.ReadLine());
+
+            configuration.SaveSettings();
+            
+            PrintConfiguration(configuration);
         }
 
-        class MyClass
+        private static void PrintConfiguration(Configuration configuration)
         {
-            //[ConfigurationManagerConfigurationItem("Username")]
-            //[FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Username")]
-            public string MyProperty { get; set; }
+            Console.WriteLine($"User '{configuration.Username}': {configuration.Age} years, Balance: {configuration.Balance:C}, Password: '{configuration.Password}'.");
         }
     }
 }

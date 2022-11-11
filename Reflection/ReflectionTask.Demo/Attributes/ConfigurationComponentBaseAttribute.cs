@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ReflectionTask.Demo
+namespace ReflectionTask.Demo.Attributes
 {
     /// <summary>
     /// Sets a value from the configuration to the decorated property.
@@ -8,6 +8,8 @@ namespace ReflectionTask.Demo
     [AttributeUsage(AttributeTargets.Property)]
     public abstract class ConfigurationComponentBaseAttribute : Attribute
     {
+        public abstract ConfigurationProviderType ProviderType { get; }
+
         /// <summary>
         /// Gets the name of a setting in configuration.
         /// </summary>
@@ -22,15 +24,5 @@ namespace ReflectionTask.Demo
 
             SettingName = settingName;
         }
-
-        /// <summary>
-        /// Loads the value on specified setting key from configuration.
-        /// </summary>
-        public abstract string LoadSettings();
-
-        /// <summary>
-        /// Saves the <paramref name="value"/> on specified setting key to configuration.
-        /// </summary>
-        public abstract void SaveSettings(string value);
     }
 }

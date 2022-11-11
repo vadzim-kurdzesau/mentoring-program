@@ -6,16 +6,19 @@ using BrainstormSessions.ClientModels;
 using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BrainstormSessions.Api
 {
     public class IdeasController : ControllerBase
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
+        private readonly ILogger<IdeasController> _logger;
 
-        public IdeasController(IBrainstormSessionRepository sessionRepository)
+        public IdeasController(IBrainstormSessionRepository sessionRepository, ILogger<IdeasController> logger)
         {
             _sessionRepository = sessionRepository;
+            _logger = logger;
         }
 
         #region snippet_ForSessionAndCreate
@@ -25,6 +28,7 @@ namespace BrainstormSessions.Api
             var session = await _sessionRepository.GetByIdAsync(sessionId);
             if (session == null)
             {
+                _logger.LogInformation("Requested a non-existent session with ID: '{SessionId}'.", sessionId);
                 return NotFound(sessionId);
             }
 
@@ -44,12 +48,14 @@ namespace BrainstormSessions.Api
         {
             if (!ModelState.IsValid)
             {
+                LogInvalidModel();
                 return BadRequest(ModelState);
             }
 
             var session = await _sessionRepository.GetByIdAsync(model.SessionId);
             if (session == null)
             {
+                _logger.LogWarning("Tried to add a new idea to a non-existent session with ID: '{SessionId}'.", model.SessionId);
                 return NotFound(model.SessionId);
             }
 
@@ -62,6 +68,7 @@ namespace BrainstormSessions.Api
             session.AddIdea(idea);
 
             await _sessionRepository.UpdateAsync(session);
+            _logger.LogDebug("Successfully updated session with ID: '{SessionId}' after adding a new idea '{IdeaName}'.", session.Id, idea.Name);
 
             return Ok(session);
         }
@@ -77,6 +84,7 @@ namespace BrainstormSessions.Api
 
             if (session == null)
             {
+                _logger.LogInformation("Requested a non-existent session with ID: '{SessionId}'.", sessionId);
                 return NotFound(sessionId);
             }
 
@@ -101,6 +109,7 @@ namespace BrainstormSessions.Api
         {
             if (!ModelState.IsValid)
             {
+                LogInvalidModel();
                 return BadRequest(ModelState);
             }
 
@@ -108,6 +117,7 @@ namespace BrainstormSessions.Api
 
             if (session == null)
             {
+                _logger.LogWarning("Tried to add a new idea to a non-existent session with ID: '{SessionId}'.", model.SessionId);
                 return NotFound(model.SessionId);
             }
 
@@ -120,9 +130,18 @@ namespace BrainstormSessions.Api
             session.AddIdea(idea);
 
             await _sessionRepository.UpdateAsync(session);
+            _logger.LogDebug("Successfully updated session with ID: '{SessionId}' after adding a new idea '{IdeaName}'.", session.Id, idea.Name);
 
             return CreatedAtAction(nameof(CreateActionResult), new { id = session.Id }, session);
         }
         #endregion
+
+        private void LogInvalidModel()
+        {
+            _logger.LogInformation("Tried to add a new idea with these errors: {Errors}",
+                string.Join(" | ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)));
+        }
     }
 }
