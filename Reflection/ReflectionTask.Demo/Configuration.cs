@@ -6,6 +6,7 @@ using System.Reflection;
 using ReflectionTask.Demo.Attributes;
 using ReflectionTask.Demo.Converters;
 using ReflectionTask.Demo.Exceptions;
+using ReflectionTask.Demo.Providers;
 
 namespace ReflectionTask.Demo
 {

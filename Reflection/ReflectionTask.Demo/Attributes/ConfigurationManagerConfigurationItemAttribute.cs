@@ -1,4 +1,6 @@
-﻿namespace ReflectionTask.Demo.Attributes
+﻿using ReflectionTask.Demo.Providers;
+
+namespace ReflectionTask.Demo.Attributes
 {
     public class ConfigurationManagerConfigurationItemAttribute : ConfigurationComponentBaseAttribute
     {

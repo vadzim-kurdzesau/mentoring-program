@@ -1,4 +1,4 @@
-﻿namespace ReflectionTask.Demo
+﻿namespace ReflectionTask.Demo.Providers
 {
     /// <summary>
     /// Loads and saves settings to the configuration provider of specified <see cref="ConfigurationProviderType"/> type.

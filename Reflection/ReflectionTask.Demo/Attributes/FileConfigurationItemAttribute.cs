@@ -1,4 +1,6 @@
-﻿namespace ReflectionTask.Demo.Attributes
+﻿using ReflectionTask.Demo.Providers;
+
+namespace ReflectionTask.Demo.Attributes
 {
     /// <summary>
     /// Sets a value from the JSON configuration file to the decorated property.

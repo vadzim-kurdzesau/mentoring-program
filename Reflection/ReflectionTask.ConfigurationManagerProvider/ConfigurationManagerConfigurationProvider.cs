@@ -1,5 +1,5 @@
-﻿using ReflectionTask.Demo;
-using ReflectionTask.Demo.Exceptions;
+﻿using ReflectionTask.Demo.Exceptions;
+using ReflectionTask.Demo.Providers;
 using System.Configuration;
 
 namespace ReflectionTask.ConfigurationManagerProvider

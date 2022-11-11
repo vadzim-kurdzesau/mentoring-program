@@ -4,7 +4,7 @@ using System.Runtime.Loader;
 
 namespace ReflectionTask.Demo
 {
-    class PluginLoadContext : AssemblyLoadContext
+    internal class PluginLoadContext : AssemblyLoadContext
     {
         private readonly AssemblyDependencyResolver _resolver;
 
