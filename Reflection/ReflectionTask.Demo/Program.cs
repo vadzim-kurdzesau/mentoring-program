@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace ReflectionTask.Demo
 {
@@ -6,15 +7,28 @@ namespace ReflectionTask.Demo
     {
         private static void Main()
         {
-            var configuration = new Configuration(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\Plugins");
+            var pluginsFolderPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Plugins");
+
+            var configuration = new Configuration(pluginsFolderPath);
 
             configuration.LoadSettings();
 
-            configuration.Username = "Vadzim";
+            PrintConfiguration(configuration);
+
+            Console.Write("New password: ");
+            configuration.Password = Console.ReadLine();
+
+            Console.Write("New balance: ");
+            configuration.Balance = float.Parse(Console.ReadLine());
 
             configuration.SaveSettings();
+            
+            PrintConfiguration(configuration);
+        }
 
-            Console.WriteLine($"{configuration.Username}: {configuration.Password}");
+        private static void PrintConfiguration(Configuration configuration)
+        {
+            Console.WriteLine($"User '{configuration.Username}': {configuration.Age} years, Balance: {configuration.Balance:C}, Password: '{configuration.Password}'.");
         }
     }
 }

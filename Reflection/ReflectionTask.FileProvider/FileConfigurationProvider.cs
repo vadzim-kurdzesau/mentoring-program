@@ -1,8 +1,13 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using ReflectionTask.Demo;
+using ReflectionTask.Demo.Exceptions;
 
 namespace ReflectionTask.FileProvider
 {
+    /// <summary>
+    /// Loads from and saves configuration to JSON file.
+    /// </summary>
     public class FileConfigurationProvider : IConfigurationProvider
     {
         private static readonly JsonSerializerOptions serializerOptions = new()
@@ -22,6 +27,19 @@ namespace ReflectionTask.FileProvider
             if (string.IsNullOrWhiteSpace(configFilePath))
             {
                 throw new ArgumentNullException(nameof(configFilePath));
+            }
+
+            if (!Path.IsPathRooted(configFilePath))
+            {
+                configFilePath = Path.Combine(
+                    Directory.GetParent(
+                        Directory.GetParent(
+                            Assembly.GetExecutingAssembly().Location).FullName).FullName, configFilePath);
+            }
+
+            if (!File.Exists(configFilePath))
+            {
+                throw new ConfigurationProviderException($"There is no configuration file on '{configFilePath}' path.");
             }
 
             ConfigurationFilePath = configFilePath;

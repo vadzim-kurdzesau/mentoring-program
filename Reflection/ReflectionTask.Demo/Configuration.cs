@@ -4,18 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ReflectionTask.Demo.Attributes;
+using ReflectionTask.Demo.Converters;
 using ReflectionTask.Demo.Exceptions;
 
 namespace ReflectionTask.Demo
 {
+    /// <summary>
+    /// Contains the application configuration.
+    /// </summary>
     public class Configuration
     {
         private const string PluginPattern = "*.dll";
 
         private readonly Dictionary<ConfigurationProviderType, IConfigurationProvider> _configurationProviders = new();
         private readonly string _pluginDirectoryPath;
+        private readonly ITypeParser _parser;
 
         public Configuration(string pluginDirectoryPath)
+            : this(pluginDirectoryPath, null)
+        {
+        }
+
+        public Configuration(string pluginDirectoryPath, ITypeParser parser)
         {
             if (string.IsNullOrWhiteSpace(pluginDirectoryPath))
             {
@@ -28,6 +38,7 @@ namespace ReflectionTask.Demo
             }
 
             _pluginDirectoryPath = pluginDirectoryPath;
+            _parser = parser ?? new DefaultParser();
         }
 
         [ConfigurationManagerConfigurationItem("Username")]
@@ -36,20 +47,34 @@ namespace ReflectionTask.Demo
         [ConfigurationManagerConfigurationItem("Password")]
         public string Password { get; set; }
 
-        [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Age")]
-        public string Age { get; set; }
+        [FileConfigurationItem("appsettings.json", "Age")]
+        public int Age { get; set; }
 
-        [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Balance")]
-        public string Balance { get; set; }
+        [FileConfigurationItem("appsettings.json", "Balance")]
+        public float Balance { get; set; }
 
+        /// <summary>
+        /// Loads settings from the configuration providers.
+        /// </summary>
         public void LoadSettings()
         {
             IterateThroughProperties((provider, property, attribute) =>
             {
-                property.SetValue(this, provider.LoadSetting(attribute.SettingName));
+                try
+                {
+                    var value = _parser.Parse(property.PropertyType, provider.LoadSetting(attribute.SettingName));
+                    property.SetValue(this, value);
+                }
+                catch (ConfigurationParserException ex)
+                {
+                    throw new ConfigurationProviderException($"Setting's '{attribute.SettingName}' value has invalid format.", ex);
+                }
             });
         }
 
+        /// <summary>
+        /// Saves settings to the configuration providers.
+        /// </summary>
         public void SaveSettings()
         {
             IterateThroughProperties((provider, property, attribute) =>
@@ -62,7 +87,7 @@ namespace ReflectionTask.Demo
         {
             foreach (var property in typeof(Configuration).GetProperties())
             {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), false)
+                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), true)
                     as ConfigurationComponentBaseAttribute;
 
                 if (attribute != null)
@@ -130,6 +155,19 @@ namespace ReflectionTask.Demo
         {
             var loadContext = new PluginLoadContext(pluginPath);
             return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
+        }
+
+        private class DefaultParser : ITypeParser
+        {
+            public dynamic Parse(Type type, string value)
+            {
+                if (type == typeof(string))
+                {
+                    return value;
+                }
+
+                throw new ConfigurationProviderException($"Configuration doesn't support the '{type.Name}' type.");
+            }
         }
     }
 }
