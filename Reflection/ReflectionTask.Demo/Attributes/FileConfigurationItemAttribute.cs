@@ -10,11 +10,12 @@
         /// </summary>
         public string ConfigurationFilePath { get; }
 
-        public override ConfigurationProviderType ProviderType => ConfigurationProviderType.Manager;
+        public override ConfigurationProviderType ProviderType => ConfigurationProviderType.File;
 
         public FileConfigurationItemAttribute(string configFilePath, string settingName)
             : base(settingName)
         {
+            ConfigurationFilePath = configFilePath;
         }
     }
 }

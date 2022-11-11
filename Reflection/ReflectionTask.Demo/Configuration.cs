@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ReflectionTask.Demo.Attributes;
+using ReflectionTask.Demo.Exceptions;
 
 namespace ReflectionTask.Demo
 {
@@ -11,7 +12,7 @@ namespace ReflectionTask.Demo
     {
         private const string PluginPattern = "*.dll";
 
-        private Dictionary<ConfigurationProviderType, IConfigurationProvider> _configurationProviders = new();
+        private readonly Dictionary<ConfigurationProviderType, IConfigurationProvider> _configurationProviders = new();
         private readonly string _pluginDirectoryPath;
 
         public Configuration(string pluginDirectoryPath)
@@ -35,6 +36,12 @@ namespace ReflectionTask.Demo
         [ConfigurationManagerConfigurationItem("Password")]
         public string Password { get; set; }
 
+        [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Age")]
+        public string Age { get; set; }
+
+        [FileConfigurationItem(@"C:\Users\Vadzim_Kurdzesau\source\repos\Learning\MentoringProgram\Reflection\ReflectionTask.Demo\appsettings.json", "Balance")]
+        public string Balance { get; set; }
+
         public void LoadSettings()
         {
             IterateThroughProperties((provider, property, attribute) =>
@@ -55,14 +62,23 @@ namespace ReflectionTask.Demo
         {
             foreach (var property in typeof(Configuration).GetProperties())
             {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationManagerConfigurationItemAttribute), false)
-                    as ConfigurationManagerConfigurationItemAttribute;
+                var attribute = Attribute.GetCustomAttribute(property, typeof(ConfigurationComponentBaseAttribute), false)
+                    as ConfigurationComponentBaseAttribute;
 
                 if (attribute != null)
                 {
                     if (!_configurationProviders.TryGetValue(attribute.ProviderType, out var provider))
                     {
-                        provider = LoadProvider(attribute.ProviderType);
+                        if (attribute.ProviderType == ConfigurationProviderType.File)
+                        {
+                            provider = LoadProvider(attribute.ProviderType, (attribute as FileConfigurationItemAttribute)?.ConfigurationFilePath);
+                        }
+                        else
+                        {
+                            provider = LoadProvider(attribute.ProviderType);
+                        }
+
+                        _configurationProviders.Add(attribute.ProviderType, provider);
                     }
 
                     action(provider, property, attribute);
@@ -70,38 +86,44 @@ namespace ReflectionTask.Demo
             }
         }
 
-        private IConfigurationProvider LoadProvider(ConfigurationProviderType providerType)
+        private IConfigurationProvider LoadProvider(ConfigurationProviderType providerType, params object[] arguments)
         {
             var pluginsPaths = Directory.EnumerateFiles(_pluginDirectoryPath, PluginPattern);
 
             var provider = pluginsPaths.Select(pluginPath =>
             {
                 Assembly pluginAssembly = LoadPlugin(pluginPath);
-                return CreateProvider(pluginAssembly);
-            }).FirstOrDefault(p => p.Type == providerType);
+                return CreateProvider(pluginAssembly, arguments);
+            }).FirstOrDefault(p => p != null && p.Type == providerType);
 
             if (provider is null)
             {
-                throw new ArgumentException($"There is no plugin with the '{providerType}' type.");
+                throw new ConfigurationProviderException($"There is no plugin with the '{providerType}' type.");
             }
 
             return provider;
         }
 
-        private static IConfigurationProvider CreateProvider(Assembly assembly)
+        private static IConfigurationProvider CreateProvider(Assembly assembly, params object[] arguments)
         {
             foreach (var type in assembly.GetTypes())
             {
                 if (typeof(IConfigurationProvider).IsAssignableFrom(type))
                 {
-                    if (Activator.CreateInstance(type) is IConfigurationProvider result)
+                    var constructorInfo = type.GetConstructor(arguments.Select(a => a.GetType()).ToArray());
+                    if (constructorInfo == null)
+                    {
+                        continue;
+                    }
+
+                    if (Activator.CreateInstance(type, arguments) is IConfigurationProvider result)
                     {
                         return result;
                     }
                 }
             }
 
-            throw new ArgumentException($"There are no configuration providers in '{assembly.FullName}' assembly.");
+            return null;
         }
 
         private static Assembly LoadPlugin(string pluginPath)
