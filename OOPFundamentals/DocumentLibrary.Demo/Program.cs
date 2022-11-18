@@ -14,9 +14,10 @@ internal class Program
 
         var directoryPath = args[0];
         var repository = new JsonDocumentRepository(directoryPath);
+
         while (true)
         {
-            Console.WriteLine("Specify the document number.");
+            Console.Write("Specify the document number: ");
             if (!int.TryParse(Console.ReadLine(), out int documentNumber))
             {
                 throw new ArgumentException("Specify the integer document number.");

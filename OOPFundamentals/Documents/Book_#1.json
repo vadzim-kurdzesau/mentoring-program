@@ -1,0 +1,1 @@
+﻿{"$type":"DocumentLibrary.Models.Book, DocumentLibrary","ISBN":"TestISBN1","Authors":["TestAuthor1","TestAuthor2"],"NumberOfPages":300,"Publisher":"TestPublisher1","DocumentId":1,"Title":"TestBook1","PublicationDate":"2012-12-12T00:00:00"}

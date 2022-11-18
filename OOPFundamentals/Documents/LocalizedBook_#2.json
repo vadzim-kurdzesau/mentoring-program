@@ -1,0 +1,1 @@
+﻿{"$type":"DocumentLibrary.Models.LocalizedBook, DocumentLibrary","LocalizationCountry":"Belarus","LocalPublisher":"TestLocalizedPublisher1","ISBN":"123456789_B","Authors":["Vadzim"],"NumberOfPages":105,"Publisher":"TestPublisher1","DocumentId":2,"Title":"TestLocalizedBook1","PublicationDate":"2022-10-16T18:34:53.1314023+02:00"}

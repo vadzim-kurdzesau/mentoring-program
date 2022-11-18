@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DocumentLibrary.Demo": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Vadzim_Kurdzesau\\source\\repos\\Learning\\MentoringProgram\\OOPFundamentals\\Documents"
+    }
+  }
+}
