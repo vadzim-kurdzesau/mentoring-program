@@ -1,76 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Task1.DoNotChange;
 
 namespace Task1
 {
     public static class LinqTask
     {
+        /// <summary>
+        /// Select the customers whose total turnover (the sum of all orders) exceeds a certain value. 
+        /// </summary>
         public static IEnumerable<Customer> Linq1(IEnumerable<Customer> customers, decimal limit)
         {
             return customers.Where(c => c.Orders.Sum(o => o.Total) > limit);
         }
 
+        /// <summary>
+        /// For each customer make a list of suppliers located in the same country and the same city. Compose query without grouping.
+        /// </summary>
         public static IEnumerable<(Customer customer, IEnumerable<Supplier> suppliers)> Linq2(
             IEnumerable<Customer> customers,
             IEnumerable<Supplier> suppliers
         )
         {
-            return customers.Select(c => (c, suppliers.Where(s => s.Country.Equals(c.Country) && s.City.Equals(c.City))));
+            return customers.Select(c => (c, suppliers.Where(s
+                    => s.Country.Equals(c.Country)
+                    && s.City.Equals(c.City))));
         }
 
+        /// <summary>
+        /// For each customer make a list of suppliers located in the same country and the same city. Compose query with grouping.
+        /// </summary>
         public static IEnumerable<(Customer customer, IEnumerable<Supplier> suppliers)> Linq2UsingGroup(
             IEnumerable<Customer> customers,
             IEnumerable<Supplier> suppliers
         )
         {
-            throw new NotImplementedException();
+            return customers.GroupJoin(
+                suppliers,
+                customer => (customer.Country, customer.City),
+                supplier => (supplier.Country, supplier.City),
+                (customer, supplier) => (customer, supplier));
         }
 
+        /// <summary>
+        /// Find all customers with the sum of all orders that exceed a certain value.
+        /// </summary>
         public static IEnumerable<Customer> Linq3(IEnumerable<Customer> customers, decimal limit)
         {
-            return customers.Where(c => c.Orders.Sum(o => o.Total) > limit);
+            return customers.Where(c => c.Orders.Any() && c.Orders.Sum(o => o.Total) > limit);
         }
 
+        /// <summary>
+        /// Select the clients, including the date of their first order. 
+        /// </summary>
         public static IEnumerable<(Customer customer, DateTime dateOfEntry)> Linq4(
             IEnumerable<Customer> customers
         )
         {
-            return customers.Where(c => c.Orders.Any()).Select(c => (c, c.Orders.First().OrderDate));
+            return customers.Where(c => c.Orders.Any())
+                .Select(c => (c, c.Orders.First().OrderDate));
         }
 
+        /// <summary>
+        /// Repeat the previous query but order the result by year, month, turnover (descending) and customer name. 
+        /// </summary>
         public static IEnumerable<(Customer customer, DateTime dateOfEntry)> Linq5(
             IEnumerable<Customer> customers
         )
         {
             return customers.Where(c => c.Orders.Any())
                 .Select(customer => (customer, customer.Orders.First().OrderDate))
-                .OrderBy(c => c.OrderDate.Year)
-                .OrderBy(c => c.OrderDate.Month);
-                //.OrderByDescending(c => c.customer.Orders.Sum(o => o.Total))
-                //.OrderBy(c => c.customer.CompanyName);
+                .OrderBy(p => p.OrderDate.Year)
+                .ThenBy(p => p.OrderDate.Month)
+                .ThenByDescending(p => p.customer.Orders.Sum(o => o.Total));
         }
 
+        /// <summary>
+        /// Select the clients which either have a) non-digit postal code or b) undefined region or c) operator code in the phone is not specified (does not contain parentheses).
+        /// </summary>
         public static IEnumerable<Customer> Linq6(IEnumerable<Customer> customers)
         {
-            throw new NotImplementedException();
+            const string operatorCodePattern = @"\(\d+\).+";
+
+            return customers.Where(c
+                => c.PostalCode.Any(c => !char.IsDigit(c))
+                || c.Region == null
+                || !Regex.Match(c.Phone, operatorCodePattern).Success);
         }
 
+        /// <summary>
+        /// Group the products by category, then by availability in stock with ordering by cost.
+        /// </summary>
+        /// <example>
+        /// category - Beverages
+        /// UnitsInStock - 39
+        ///     price - 18.0000
+        ///     price - 19.0000
+        /// UnitsInStock - 17
+        ///     price - 18.0000
+        ///     price - 19.0000
+        /// </example>
         public static IEnumerable<Linq7CategoryGroup> Linq7(IEnumerable<Product> products)
         {
-            /* example of Linq7result
-
-             category - Beverages
-	            UnitsInStock - 39
-		            price - 18.0000
-		            price - 19.0000
-	            UnitsInStock - 17
-		            price - 18.0000
-		            price - 19.0000
-             */
-
-            throw new NotImplementedException();
+            return products.GroupBy(p => p.Category, (category, productsByCategory) => new Linq7CategoryGroup
+            {
+                Category = category,
+                UnitsInStockGroup = productsByCategory.GroupBy(p => p.UnitsInStock, (unitsInStock, productsByUnits) => new Linq7UnitsInStockGroup
+                {
+                    UnitsInStock = unitsInStock,
+                    Prices = productsByUnits.Select(p => p.UnitPrice)
+                })
+            });
         }
 
         public static IEnumerable<(decimal category, IEnumerable<Product> products)> Linq8(
