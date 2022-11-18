@@ -115,6 +115,12 @@ namespace Task1
             });
         }
 
+        /// <summary>
+        /// Group the products by “cheap”, “average” and “expensive” following the rules:
+        /// a. From 0 to cheap inclusive
+        /// b. From cheap exclusive to average inclusive
+        /// c. From average exclusive to expensive inclusive
+        /// </summary>
         public static IEnumerable<(decimal category, IEnumerable<Product> products)> Linq8(
             IEnumerable<Product> products,
             decimal cheap,
@@ -125,13 +131,27 @@ namespace Task1
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Calculate the average profitability of each city (average amount of orders per customer) and average rate (average number of orders per customer from each city). 
+        /// </summary>
         public static IEnumerable<(string city, int averageIncome, int averageIntensity)> Linq9(
             IEnumerable<Customer> customers
         )
         {
-            throw new NotImplementedException();
+            return customers.GroupBy(
+                c => c.City,
+                (city, customersByCity) => (
+                    city,
+                    (int)Math.Round(customersByCity
+                                        .Select(c => c.Orders)
+                                        .Average(orders => orders.Sum(o => o.Total))),
+                    (int)Math.Round(customersByCity.Select(c => c.Orders)
+                                    .Average(orders => orders.Count()))));
         }
 
+        /// <summary>
+        /// Build a string of unique supplier country names, sorted first by length and then by country.
+        /// </summary>
         public static string Linq10(IEnumerable<Supplier> suppliers)
         {
             var countryNames = suppliers.Select(s => s.Country)
