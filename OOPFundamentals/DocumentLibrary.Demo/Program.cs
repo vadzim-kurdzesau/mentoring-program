@@ -1,4 +1,6 @@
 ﻿using DocumentLibrary.Models;
+using DocumentLibrary.Service;
+using DocumentLibrary.Service.Caching;
 
 namespace DocumentLibrary.Demo;
 
@@ -12,7 +14,16 @@ internal class Program
         }
 
         var directoryPath = args[0];
-        var repository = new JsonDocumentRepository(directoryPath);
+
+        var cacheConfiguration = new Dictionary<Type, DocumentCachingOptions>
+        {
+            { typeof(Patent), new() { ExpirationTime = Timeout.InfiniteTimeSpan } },
+            { typeof(Book), new() { ExpirationTime = TimeSpan.FromSeconds(10) } },
+            { typeof(LocalizedBook), new() },
+        };
+
+        var repository = new CachingDocumentRepository(
+            new JsonDocumentRepository(directoryPath), new DocumentCache(cacheConfiguration));
 
         while (true)
         {

@@ -22,8 +22,15 @@ namespace DocumentLibrary
             _directoryPath = directoryPath;
         }
 
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentNullException">Thrown, if <paramref name="document"/> is null.</exception>
         public void Add(Document document)
         {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
             var filePath = GetPathToDocument(document);
             using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
             {
@@ -35,10 +42,17 @@ namespace DocumentLibrary
             }
         }
 
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentNullException">Thrown, if <paramref name="type"/> is null.</exception>
         public Document? Get(Type type, int documentNumber)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             var filePath = GetPathToDocument(type, documentNumber);
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 return null;
             }
