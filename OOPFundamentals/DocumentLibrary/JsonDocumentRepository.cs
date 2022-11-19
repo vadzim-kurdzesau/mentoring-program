@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
@@ -8,12 +8,17 @@ namespace DocumentLibrary
 {
     public class JsonDocumentRepository : IDocumentRepository
     {
-        private const string filePattern = "*_#{0}.json";
+        private const string filePattern = "{0}_#{1}.json";
         private static readonly JsonSerializerSettings serializerSettings = new() { TypeNameHandling = TypeNameHandling.Objects };
         private readonly string _directoryPath;
 
         public JsonDocumentRepository(string directoryPath)
         {
+            if (!Directory.Exists(directoryPath))
+            {
+                throw new ArgumentException($"Directory '{directoryPath}' does not exist.");
+            }
+
             _directoryPath = directoryPath;
         }
 
@@ -30,25 +35,29 @@ namespace DocumentLibrary
             }
         }
 
-        public IEnumerable<Document> Get(int documentNumber)
+        public Document? Get(Type type, int documentNumber)
         {
-            var filePaths = Directory.GetFiles(_directoryPath, string.Format(filePattern, documentNumber));
-            foreach (var filePath in filePaths)
+            var filePath = GetPathToDocument(type, documentNumber);
+            if (File.Exists(filePath))
             {
-                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                return null;
+            }
+
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
                 {
-                    using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
-                    {
-                        var serializedDocument = streamReader.ReadToEnd();
-                        yield return JsonConvert.DeserializeObject<Document>(serializedDocument, serializerSettings);
-                    }
+                    var serializedDocument = streamReader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<Document>(serializedDocument, serializerSettings);
                 }
             }
         }
 
-        private string GetPathToDocument(Document document)
+        private string GetPathToDocument(Document document) => GetPathToDocument(document.GetType(), document.DocumentId);
+
+        private string GetPathToDocument(Type type, int documentId)
         {
-            return Path.Combine(_directoryPath, $"{document.GetType().Name}_#{document.DocumentId}.json");
+            return Path.Combine(_directoryPath, string.Format(filePattern, type.Name, documentId));
         }
     }
 }

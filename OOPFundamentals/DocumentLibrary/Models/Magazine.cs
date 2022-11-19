@@ -1,13 +1,14 @@
-﻿namespace DocumentLibrary.Models;
-
-public class Magazine : Document
+﻿namespace DocumentLibrary.Models
 {
-    public string Publisher { get; set; }
-
-    public string ReleaseNumber { get; set; }
-
-    public override string GetInfo()
+    public class Magazine : Document
     {
-        return $"{DocumentId}, Title: '{Title}', {PublicationDate.ToString("dd MMMM yyyy")}, Release Number: {ReleaseNumber}, Publisher: {Publisher}";
+        public string Publisher { get; set; }
+
+        public string ReleaseNumber { get; set; }
+
+        public override string GetInfo()
+        {
+            return $"{DocumentId}, Title: '{Title}', {PublicationDate.ToString("dd MMMM yyyy")}, Release Number: {ReleaseNumber}, Publisher: {Publisher}";
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DocumentLibrary.Models;
 using DocumentLibrary.Service.Caching;
 
@@ -22,14 +21,14 @@ namespace DocumentLibrary.Service
             _documentRepository.Add(document);
         }
 
-        public IEnumerable<Document> Get(int documentNumber)
+        public Document? Get(Type type, int documentNumber)
         {
             if (_documentCache.TryGet(documentNumber, out var document))
             {
                 //return document;
             }
 
-            return _documentRepository.Get(documentNumber);
+            return _documentRepository.Get(type, documentNumber);
         }
     }
 }

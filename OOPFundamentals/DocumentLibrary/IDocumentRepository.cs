@@ -1,5 +1,5 @@
-﻿using DocumentLibrary.Models;
-using System.Collections.Generic;
+﻿using System;
+using DocumentLibrary.Models;
 
 namespace DocumentLibrary
 {
@@ -13,6 +13,7 @@ namespace DocumentLibrary
         /// <summary>
         /// Gets the <see cref="Document"/> with specified <paramref name="documentNumber"/>.
         /// </summary>
-        public IEnumerable<Document> Get(int documentNumber);
+        /// <returns><see cref="Document"/> if exists; otherwise null.</returns>
+        public Document? Get(Type type, int documentNumber);
     }
 }

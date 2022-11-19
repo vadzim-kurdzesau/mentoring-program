@@ -1,5 +1,4 @@
-﻿using DocumentLibrary;
-using DocumentLibrary.Models;
+﻿using DocumentLibrary.Models;
 
 namespace DocumentLibrary.Demo;
 
@@ -17,17 +16,40 @@ internal class Program
 
         while (true)
         {
+            var documentType = ReadDocumentType();
+
             Console.Write("Specify the document number: ");
             if (!int.TryParse(Console.ReadLine(), out int documentNumber))
             {
                 throw new ArgumentException("Specify the integer document number.");
             }
 
-            var documents = repository.Get(documentNumber);
-            foreach (var document in documents)
+            var document = repository.Get(documentType, documentNumber);
+            if (document != null)
             {
                 Console.WriteLine(document.GetInfo());
             }
         }
+    }
+
+    private static Type ReadDocumentType()
+    {
+        Console.WriteLine("1) Patent            2) Book");
+        Console.WriteLine("3) Localized Book    4) Magazine");
+        Console.Write("Select a document type: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int documentType))
+        {
+            throw new ArgumentException("Specify the integer number of document type.");
+        }
+
+        return documentType switch
+        {
+            1 => typeof(Patent),
+            2 => typeof(Book),
+            3 => typeof(LocalizedBook),
+            4 => typeof(Magazine),
+            _ => throw new ArgumentException()
+        };
     }
 }
