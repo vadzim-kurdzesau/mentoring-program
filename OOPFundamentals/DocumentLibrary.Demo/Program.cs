@@ -1,6 +1,7 @@
 ﻿using DocumentLibrary.Models;
 using DocumentLibrary.Service;
 using DocumentLibrary.Service.Caching;
+using Microsoft.Extensions.Logging;
 
 namespace DocumentLibrary.Demo;
 
@@ -22,8 +23,11 @@ internal class Program
             { typeof(LocalizedBook), new() },
         };
 
+        var logger = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug))
+            .CreateLogger<CachingDocumentRepository>();
+
         var repository = new CachingDocumentRepository(
-            new JsonDocumentRepository(directoryPath), new DocumentCache(cacheConfiguration));
+            new JsonDocumentRepository(directoryPath), new DocumentCache(cacheConfiguration), logger);
 
         while (true)
         {
