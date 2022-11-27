@@ -1,7 +1,8 @@
-﻿using System.Data;
-using System.Data.SqlClient;
-using AdoNetFundamentals.Extensions;
+﻿using AdoNetFundamentals.Extensions;
 using AdoNetFundamentals.Models;
+using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace AdoNetFundamentals.Repositories
 {
@@ -34,12 +35,12 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
-        public Product? Get(int id)
+        public Product Get(int id)
         {
             using (_databaseConnection)
             {
                 _databaseConnection.Open();
-                var command = new SqlCommand("SELECT * FROM Product WHERE Id = @Id", _databaseConnection);
+                var command = new SqlCommand("SELECT * FROM Products WHERE Id = @Id", _databaseConnection);
                 command.Parameters.AddWithValue("@Id", id);
 
                 var reader = command.ExecuteReader();
@@ -64,10 +65,10 @@ namespace AdoNetFundamentals.Repositories
                 command.CommandType = CommandType.Text;
                 command.CommandText = "UPDATE Product"
                                     + " SET Name = @Name,"
-                                    + "     Description = @Description," 
+                                    + "     Description = @Description,"
                                     + "     Weight = @Weight,"
                                     + "     Height = @Height,"
-                                    + "     Width = @Width," 
+                                    + "     Width = @Width,"
                                     + "     Length = @Length"
                                     + " WHERE Id = @Id";
 

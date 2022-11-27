@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Product]
+﻿CREATE TABLE [dbo].[Products]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
 	[Name] NVARCHAR(50) NOT NULL,
