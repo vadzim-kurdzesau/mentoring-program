@@ -12,10 +12,13 @@ public class UnitTest1
 
         repository.Add(new Order
         {
-            Status = "Arrived",
+            Status = "Done",
             CreatedDate = DateTime.Now,
             ProductId = 2,
         });
+
+        //repository.Delete(4);
+
         //var result = repository.Get(2);
 
         //repository.Add(new Product

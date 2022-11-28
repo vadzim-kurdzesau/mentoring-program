@@ -1,6 +1,6 @@
-﻿using AdoNetFundamentals.Models;
-using System;
+﻿using System;
 using System.Data;
+using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Extensions
 {

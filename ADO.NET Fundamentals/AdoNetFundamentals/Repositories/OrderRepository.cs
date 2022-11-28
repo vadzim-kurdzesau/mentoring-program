@@ -1,8 +1,8 @@
-﻿using AdoNetFundamentals.Extensions;
-using AdoNetFundamentals.Models;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using AdoNetFundamentals.Extensions;
+using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Repositories
 {
@@ -40,12 +40,7 @@ namespace AdoNetFundamentals.Repositories
                 FetchTableData(databaseConnection, OrdersTableName);
 
                 var orderRow = _dataSet.Tables[OrdersTableName].NewRow();
-
-                orderRow[0] = order.Id;
-                orderRow[1] = order.Status;
-                orderRow[2] = order.CreatedDate;
-                orderRow[3] = order.UpdatedDate == null ? DBNull.Value : order.UpdatedDate;
-                orderRow[4] = order.ProductId;
+                InsertOrderIntoRow(order, orderRow);
 
                 _dataSet.Tables[OrdersTableName].Rows.Add(orderRow);
                 var dataAdapter = new SqlDataAdapter($"SELECT * FROM {OrdersTableName}", databaseConnection);
@@ -74,14 +69,50 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
-        public void Update(Order obj)
+        public void Update(Order order)
         {
-            throw new NotImplementedException();
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, OrdersTableName);
+
+                var dataAdapter = new SqlDataAdapter($"SELECT * FROM {OrdersTableName}", databaseConnection);
+
+                var commandBuilder = new SqlCommandBuilder(dataAdapter);
+                commandBuilder.GetUpdateCommand();
+
+                var orderRow = _dataSet.Tables[OrdersTableName].Rows.Find(order.Id);
+                if (orderRow == null)
+                {
+                    return;
+                }
+
+                UpdateOrderRow(orderRow, order);
+                dataAdapter.Update(_dataSet, OrdersTableName);
+            }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, OrdersTableName);
+
+                var dataAdapter = new SqlDataAdapter($"SELECT * FROM {OrdersTableName}", databaseConnection);
+
+                var commandBuilder = new SqlCommandBuilder(dataAdapter);
+                commandBuilder.GetDeleteCommand();
+
+                var orderRow = _dataSet.Tables[OrdersTableName].Rows.Find(id);
+                if (orderRow == null)
+                {
+                    return;
+                }
+
+                orderRow.Delete();
+                dataAdapter.Update(_dataSet, OrdersTableName);
+            }
         }
 
         private void FetchTableData(SqlConnection databaseConnection, string tableName)
@@ -94,6 +125,23 @@ namespace AdoNetFundamentals.Repositories
 
             _dataSet.Tables[tableName].Clear();
             adapter.Fill(_dataSet, tableName);
+        }
+
+        private static void InsertOrderIntoRow(Order order, DataRow row)
+        {
+            row[0] = order.Id;
+            row[1] = order.Status;
+            row[2] = order.CreatedDate;
+            row[3] = order.UpdatedDate == null ? DBNull.Value : order.UpdatedDate;
+            row[4] = order.ProductId;
+        }
+
+        private static void UpdateOrderRow(DataRow row, Order order)
+        {
+            row[1] = order.Status;
+            row[2] = order.CreatedDate;
+            row[3] = order.UpdatedDate == null ? DBNull.Value : order.UpdatedDate;
+            row[4] = order.ProductId;
         }
     }
 }

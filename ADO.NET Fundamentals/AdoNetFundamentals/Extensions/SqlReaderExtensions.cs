@@ -1,5 +1,5 @@
-﻿using AdoNetFundamentals.Models;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
+using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Extensions
 {
