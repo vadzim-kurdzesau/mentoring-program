@@ -6,7 +6,7 @@ Queries:
 
 1. Select the customers whose total turnover (the sum of all orders) exceeds a certain value. 
 
-2.For each customer make a list of suppliers located in the same country and the same city. Compose queries with and without grouping. 
+2. For each customer make a list of suppliers located in the same country and the same city. Compose queries with and without grouping. 
 
 3. Find all customers with the sum of all orders that exceed a certain value. 
 
