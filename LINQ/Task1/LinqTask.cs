@@ -49,7 +49,7 @@ namespace Task1
         /// </summary>
         public static IEnumerable<Customer> Linq3(IEnumerable<Customer> customers, decimal limit)
         {
-            return customers.Where(c => c.Orders.Any() && c.Orders.Sum(o => o.Total) > limit);
+            return customers.Where(c => c.Orders.Any(o => o.Total > limit));
         }
 
         /// <summary>
