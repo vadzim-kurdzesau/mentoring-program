@@ -128,7 +128,28 @@ namespace Task1
             decimal expensive
         )
         {
-            throw new NotImplementedException();
+            return products.GroupBy(p => GetProductCategory(p.UnitPrice))
+                .Select(group => (group.Key, group.AsEnumerable()));
+
+            decimal GetProductCategory(decimal unitPrice)
+            {
+                if (unitPrice > 0 && unitPrice <= cheap)
+                {
+                    return cheap;
+                }
+
+                if (unitPrice > cheap && unitPrice <= middle)
+                {
+                    return middle;
+                }
+
+                if (unitPrice > middle && unitPrice <= expensive)
+                {
+                    return expensive;
+                }
+
+                throw new ArgumentException("Product has invalid price category.");
+            }
         }
 
         /// <summary>
