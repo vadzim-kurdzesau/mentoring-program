@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using AdoNetFundamentals.Exceptions;
 using AdoNetFundamentals.Extensions;
 using AdoNetFundamentals.Models;
 
@@ -34,15 +35,20 @@ namespace AdoNetFundamentals.Repositories
 
         public void Add(Order order)
         {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
             using (var databaseConnection = new SqlConnection(_connectionString))
             {
                 databaseConnection.Open();
                 FetchTableData(databaseConnection, OrdersTableName);
 
-                var orderRow = _dataSet.Tables[OrdersTableName].NewRow();
+                var orderRow = _dataSet.Tables[OrdersTableName]!.NewRow();
                 InsertOrderIntoRow(order, orderRow);
 
-                _dataSet.Tables[OrdersTableName].Rows.Add(orderRow);
+                _dataSet.Tables[OrdersTableName]!.Rows.Add(orderRow);
                 var dataAdapter = new SqlDataAdapter($"SELECT * FROM {OrdersTableName}", databaseConnection);
 
                 var commandBuilder = new SqlCommandBuilder(dataAdapter);
@@ -52,14 +58,14 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
-        public Order Get(int id)
+        public Order? Get(int id)
         {
             using (var databaseConnection = new SqlConnection(_connectionString))
             {
                 databaseConnection.Open();
                 FetchTableData(databaseConnection, OrdersTableName);
 
-                var orderRow = _dataSet.Tables[OrdersTableName].Rows.Find(id);
+                var orderRow = _dataSet.Tables[OrdersTableName]!.Rows.Find(id);
                 if (orderRow == null)
                 {
                     return null;
@@ -71,6 +77,11 @@ namespace AdoNetFundamentals.Repositories
 
         public void Update(Order order)
         {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
             using (var databaseConnection = new SqlConnection(_connectionString))
             {
                 databaseConnection.Open();
@@ -81,10 +92,10 @@ namespace AdoNetFundamentals.Repositories
                 var commandBuilder = new SqlCommandBuilder(dataAdapter);
                 commandBuilder.GetUpdateCommand();
 
-                var orderRow = _dataSet.Tables[OrdersTableName].Rows.Find(order.Id);
+                var orderRow = _dataSet.Tables[OrdersTableName]!.Rows.Find(order.Id);
                 if (orderRow == null)
                 {
-                    return;
+                    throw new EntryDoesNotExistException($"Order with id '{order.Id}' does not exist.");
                 }
 
                 UpdateOrderRow(orderRow, order);
@@ -104,10 +115,10 @@ namespace AdoNetFundamentals.Repositories
                 var commandBuilder = new SqlCommandBuilder(dataAdapter);
                 commandBuilder.GetDeleteCommand();
 
-                var orderRow = _dataSet.Tables[OrdersTableName].Rows.Find(id);
+                var orderRow = _dataSet.Tables[OrdersTableName]!.Rows.Find(id);
                 if (orderRow == null)
                 {
-                    return;
+                    throw new EntryDoesNotExistException($"Order with id '{id}' does not exist.");
                 }
 
                 orderRow.Delete();
@@ -123,7 +134,7 @@ namespace AdoNetFundamentals.Repositories
                 throw new ArgumentException($"DataSet doesn't contain the '{tableName}' table.");
             }
 
-            _dataSet.Tables[tableName].Clear();
+            _dataSet.Tables[tableName]!.Clear();
             adapter.Fill(_dataSet, tableName);
         }
 

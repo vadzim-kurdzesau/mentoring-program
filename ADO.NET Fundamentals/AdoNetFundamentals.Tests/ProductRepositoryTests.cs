@@ -7,6 +7,7 @@ using AdoNetFundamentals.Tests.Utilities;
 
 namespace AdoNetFundamentals.Tests
 {
+    [Collection("AdoNetFundamentalsTests")] // Include to collection to run tests sequentally, not in parallel
     public sealed class ProductRepositoryTests
     {
         const string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ado_net_fundamentals";
@@ -15,6 +16,7 @@ namespace AdoNetFundamentals.Tests
         public ProductRepositoryTests()
         {
             _repository = new ProductRepository(ConnectionString);
+            new SqlConnection(ConnectionString).ClearTable("Orders");
             new SqlConnection(ConnectionString).ClearTable("Products");
         }
 
@@ -29,7 +31,6 @@ namespace AdoNetFundamentals.Tests
             _repository.Add(expected);
 
             var actual = _repository.Get(expected.Id);
-
             Assert.Equal(expected, actual, new ProductComparer());
         }
 
@@ -53,7 +54,6 @@ namespace AdoNetFundamentals.Tests
             _repository.Update(expected);
 
             var actual = _repository.Get(expected.Id);
-
             Assert.Equal(expected, actual, new ProductComparer());
         }
 
@@ -80,7 +80,6 @@ namespace AdoNetFundamentals.Tests
             _repository.Add(expected);
 
             _repository.Delete(expected.Id);
-
             Assert.Null(_repository.Get(expected.Id));
         }
 
