@@ -16,7 +16,7 @@ namespace AdoNetFundamentals.Extensions
             return new Order
             {
                 Id = (int)row[0],
-                Status = (string)row[1],
+                Status = Enum.Parse<OrderStatus>((string)row[1]),
                 CreatedDate = (DateTime)row[2],
                 UpdatedDate = row.GetValueOrDefault<DateTime?>(3),
                 ProductId = (int)row[4],

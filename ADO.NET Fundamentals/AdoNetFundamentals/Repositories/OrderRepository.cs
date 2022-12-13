@@ -130,7 +130,7 @@ namespace AdoNetFundamentals.Repositories
         private static void InsertOrderIntoRow(Order order, DataRow row)
         {
             row[0] = order.Id;
-            row[1] = order.Status;
+            row[1] = order.Status.ToString();
             row[2] = order.CreatedDate;
             row[3] = order.UpdatedDate == null ? DBNull.Value : order.UpdatedDate;
             row[4] = order.ProductId;
@@ -138,7 +138,7 @@ namespace AdoNetFundamentals.Repositories
 
         private static void UpdateOrderRow(DataRow row, Order order)
         {
-            row[1] = order.Status;
+            row[1] = order.Status.ToString();
             row[2] = order.CreatedDate;
             row[3] = order.UpdatedDate == null ? DBNull.Value : order.UpdatedDate;
             row[4] = order.ProductId;
