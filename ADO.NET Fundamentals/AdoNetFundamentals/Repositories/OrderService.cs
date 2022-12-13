@@ -8,13 +8,13 @@ using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Repositories
 {
-    public class OrderRepository : IRepository<Order>
+    public class OrderService : IOrderService
     {
         private const string OrdersTableName = "Orders";
         private readonly string _connectionString;
         private readonly DataSet _dataSet;
 
-        public OrderRepository(string connectionString)
+        public OrderService(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
@@ -142,9 +142,66 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
+        public IEnumerable<Order> GetByMonth(Month month)
+        {
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, $"EXEC Orders_GetByMonthCreated {(int)month}", OrdersTableName);
+
+                var orderRows = _dataSet.Tables[OrdersTableName]!.Rows;
+                foreach (DataRow orderRow in orderRows)
+                {
+                    yield return orderRow.ToOrder();
+                }
+            }
+        }
+
+        public IEnumerable<Order> GetByYear(int year)
+        {
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, $"EXEC Orders_GetByYearCreated {year}", OrdersTableName);
+
+                var orderRows = _dataSet.Tables[OrdersTableName]!.Rows;
+                foreach (DataRow orderRow in orderRows)
+                {
+                    yield return orderRow.ToOrder();
+                }
+            }
+        }
+
+        public IEnumerable<Order> GetByProduct(int productId)
+        {
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, $"EXEC Orders_GetByProductId {productId}", OrdersTableName);
+
+                var orderRows = _dataSet.Tables[OrdersTableName]!.Rows;
+                foreach (DataRow orderRow in orderRows)
+                {
+                    yield return orderRow.ToOrder();
+                }
+            }
+        }
+
         private void FetchTableData(SqlConnection databaseConnection, string tableName)
         {
             var adapter = new SqlDataAdapter($"SELECT * FROM {tableName}", databaseConnection);
+            if (!_dataSet.Tables.Contains(tableName))
+            {
+                throw new ArgumentException($"DataSet doesn't contain the '{tableName}' table.");
+            }
+
+            _dataSet.Tables[tableName]!.Clear();
+            adapter.Fill(_dataSet, tableName);
+        }
+
+        private void FetchTableData(SqlConnection databaseConnection, string sqlCommand, string tableName)
+        {
+            var adapter = new SqlDataAdapter(sqlCommand, databaseConnection);
             if (!_dataSet.Tables.Contains(tableName))
             {
                 throw new ArgumentException($"DataSet doesn't contain the '{tableName}' table.");
