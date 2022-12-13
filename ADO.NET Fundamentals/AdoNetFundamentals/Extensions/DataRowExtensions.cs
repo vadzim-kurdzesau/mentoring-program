@@ -4,9 +4,9 @@ using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Extensions
 {
-    public static class DataRowExtensions
+    internal static class DataRowExtensions
     {
-        public static T GetValueOrDefault<T>(this DataRow row, int index)
+        public static T? GetValueOrDefault<T>(this DataRow row, int index)
         {
             return !row.IsNull(index) ? (T)row[index] : default;
         }

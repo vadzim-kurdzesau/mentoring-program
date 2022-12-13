@@ -4,5 +4,5 @@
 	[Status] VARCHAR(20) NOT NULL,
 	[CreatedDate] DATE NOT NULL,
 	[UpdatedDate] DATE,
-	[ProductId] INT FOREIGN KEY REFERENCES Products(Id) NOT NULL,
+	[ProductId] INT FOREIGN KEY REFERENCES Products(Id) ON DELETE NO ACTION NOT NULL,
 )

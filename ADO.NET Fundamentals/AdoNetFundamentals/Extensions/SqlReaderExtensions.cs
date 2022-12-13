@@ -1,11 +1,12 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using AdoNetFundamentals.Models;
 
 namespace AdoNetFundamentals.Extensions
 {
     internal static class SqlReaderExtensions
     {
-        public static T GetValueOrDefault<T>(this SqlDataReader dataReader, int index)
+        public static T? GetValueOrDefault<T>(this SqlDataReader dataReader, int index)
         {
             return !dataReader.IsDBNull(index) ? (T)dataReader.GetValue(index) : default;
         }
@@ -16,12 +17,22 @@ namespace AdoNetFundamentals.Extensions
             {
                 Id = reader.GetInt32(0),
                 Name = reader.GetString(1),
-                Description = reader.GetString(2),
+                Description = reader.GetValueOrDefault<string>(2),
                 Weight = reader.GetValueOrDefault<float?>(3),
                 Height = reader.GetValueOrDefault<float?>(4),
                 Width = reader.GetValueOrDefault<float?>(5),
                 Length = reader.GetValueOrDefault<float?>(6)
             };
+        }
+
+        public static object GetValueOrDbNull<T>(this T value)
+        {
+            if (value == null)
+            {
+                return DBNull.Value;
+            }
+
+            return value;
         }
     }
 }
