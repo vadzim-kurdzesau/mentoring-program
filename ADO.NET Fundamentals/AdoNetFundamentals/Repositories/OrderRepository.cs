@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using AdoNetFundamentals.Exceptions;
@@ -123,6 +124,21 @@ namespace AdoNetFundamentals.Repositories
 
                 orderRow.Delete();
                 dataAdapter.Update(_dataSet, OrdersTableName);
+            }
+        }
+
+        public IEnumerable<Order> GetAll()
+        {
+            using (var databaseConnection = new SqlConnection(_connectionString))
+            {
+                databaseConnection.Open();
+                FetchTableData(databaseConnection, OrdersTableName);
+
+                var orderRows = _dataSet.Tables[OrdersTableName]!.Rows;
+                foreach (DataRow orderRow in orderRows)
+                {
+                    yield return orderRow.ToOrder();
+                }
             }
         }
 

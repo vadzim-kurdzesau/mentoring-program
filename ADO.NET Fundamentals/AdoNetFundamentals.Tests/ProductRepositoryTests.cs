@@ -88,5 +88,25 @@ namespace AdoNetFundamentals.Tests
         {
             Assert.Throws<EntryDoesNotExistException>(() => _repository.Delete(id: int.MaxValue));
         }
+
+        [Fact]
+        public void GetAll_GetsAllProducts()
+        {
+            var expected = new Product[]
+            {
+                new() { Name = "TestProduct1" },
+                new() { Name = "TestProduct2" },
+                new() { Name = "TestProduct3" },
+            };
+
+            foreach (var product in expected)
+            {
+                _repository.Add(product);
+            }
+
+            var actual = _repository.GetAll();
+
+            Assert.Equal(expected, actual, new ProductComparer());
+        }
     }
 }

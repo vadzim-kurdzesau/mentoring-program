@@ -1,4 +1,6 @@
-﻿namespace AdoNetFundamentals.Repositories
+﻿using System.Collections.Generic;
+
+namespace AdoNetFundamentals.Repositories
 {
     public interface IRepository<T>
     {
@@ -22,5 +24,10 @@
         /// Deletes <typeparamref name="T"/> with specified <paramref name="id"/> from database.
         /// </summary>
         void Delete(int id);
+
+        /// <summary>
+        /// Gets all <typeparamref name="T"/> from database.
+        /// </summary>
+        IEnumerable<T> GetAll();
     }
 }

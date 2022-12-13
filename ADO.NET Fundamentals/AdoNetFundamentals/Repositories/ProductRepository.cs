@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using AdoNetFundamentals.Exceptions;
@@ -108,6 +109,21 @@ namespace AdoNetFundamentals.Repositories
                 if (rowsDeleted == 0)
                 {
                     throw new EntryDoesNotExistException($"Product with id '{id}' does not exist.");
+                }
+            }
+        }
+
+        public IEnumerable<Product> GetAll()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var command = new SqlCommand("SELECT * FROM Products", connection);
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    yield return reader.ToProduct();
                 }
             }
         }

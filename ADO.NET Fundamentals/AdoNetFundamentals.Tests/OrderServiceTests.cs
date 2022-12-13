@@ -118,5 +118,31 @@ namespace AdoNetFundamentals.Tests
         {
             Assert.Throws<EntryDoesNotExistException>(() => _orderRepository.Delete(id: int.MaxValue));
         }
+
+        [Fact]
+        public void GetAll_GetsAllOrders()
+        {
+            var product = new Product
+            {
+                Name = "TestProduct"
+            };
+
+            _productRepository.Add(product);
+            var expected = new Order[]
+            {
+                new() { Status = OrderStatus.NotStarted, CreatedDate = DateTime.Now, ProductId = product.Id },
+                new() { Status = OrderStatus.Loading, CreatedDate = DateTime.Now, ProductId = product.Id },
+                new() { Status = OrderStatus.InProgress, CreatedDate = DateTime.Now, ProductId = product.Id },
+            };
+
+            foreach (var order in expected)
+            {
+                _orderRepository.Add(order);
+            }
+
+            var actual = _orderRepository.GetAll();
+
+            Assert.Equal(expected, actual, new OrderComparer());
+        }
     }
 }
