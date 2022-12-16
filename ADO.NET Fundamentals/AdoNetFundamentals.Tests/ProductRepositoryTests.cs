@@ -10,14 +10,13 @@ namespace AdoNetFundamentals.Tests
     [Collection("AdoNetFundamentalsTests")] // Include to collection to run tests sequentally, not in parallel
     public sealed class ProductRepositoryTests
     {
-        const string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ado_net_fundamentals";
         private readonly ProductRepository _repository;
 
         public ProductRepositoryTests()
         {
-            _repository = new ProductRepository(ConnectionString);
-            new SqlConnection(ConnectionString).ClearTable("Orders");
-            new SqlConnection(ConnectionString).ClearTable("Products");
+            _repository = new ProductRepository(Constants.ConnectionString);
+            new SqlConnection(Constants.ConnectionString).ClearTable("Orders");
+            new SqlConnection(Constants.ConnectionString).ClearTable("Products");
         }
 
         [Fact]
