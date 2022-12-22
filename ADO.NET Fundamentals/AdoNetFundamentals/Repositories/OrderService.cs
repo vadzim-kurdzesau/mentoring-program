@@ -142,7 +142,7 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
-        public IEnumerable<Order> GetByMonth(Month month)
+        public IEnumerable<Order> GetByMonthCreated(Month month)
         {
             using (var databaseConnection = new SqlConnection(_connectionString))
             {
@@ -157,7 +157,7 @@ namespace AdoNetFundamentals.Repositories
             }
         }
 
-        public IEnumerable<Order> GetByYear(int year)
+        public IEnumerable<Order> GetByYearCreated(int year)
         {
             using (var databaseConnection = new SqlConnection(_connectionString))
             {

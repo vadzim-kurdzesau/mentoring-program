@@ -42,6 +42,11 @@ namespace OrmFundamentals.EntityFramework.Services
                 throw new ArgumentNullException(nameof(product));
             }
 
+            if (!_orderContext.Products.Any(p => p.Id == product.Id))
+            {
+                throw new EntryDoesNotExistException($"Product with id '{product.Id}' does not exist.");
+            }
+
             _orderContext.Products.Update(product);
             _orderContext.SaveChanges();
         }

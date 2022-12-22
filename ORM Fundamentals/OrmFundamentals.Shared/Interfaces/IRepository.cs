@@ -2,14 +2,30 @@
 {
     public interface IRepository<T>
     {
-        void Add(T entry);
+        /// <summary>
+        /// Adds <typeparamref name="T"/> to database.
+        /// </summary>
+        void Add(T obj);
 
+        /// <summary>
+        /// Gets the <typeparamref name="T"/> with specified <paramref name="id"/> from database.
+        /// </summary>
+        /// <returns>Null, if <typeparamref name="T"/> with specified <paramref name="id"/> does not exist.</returns>
         T? Get(int id);
 
-        IEnumerable<T> GetAll();
+        /// <summary>
+        /// Updates the <typeparamref name="T"/> with the same ID in database.
+        /// </summary>
+        void Update(T obj);
 
-        void Update(T entry);
-
+        /// <summary>
+        /// Deletes <typeparamref name="T"/> with specified <paramref name="id"/> from database.
+        /// </summary>
         void Delete(int id);
+
+        /// <summary>
+        /// Gets all <typeparamref name="T"/> from database.
+        /// </summary>
+        IEnumerable<T> GetAll();
     }
 }

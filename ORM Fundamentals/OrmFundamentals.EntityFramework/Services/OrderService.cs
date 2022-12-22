@@ -1,4 +1,5 @@
-﻿using OrmFundamentals.Shared;
+﻿using Microsoft.EntityFrameworkCore;
+using OrmFundamentals.Shared;
 using OrmFundamentals.Shared.Exceptions;
 using OrmFundamentals.Shared.Models;
 using OrmFundamentals.Shared.Services;
@@ -43,6 +44,11 @@ namespace OrmFundamentals.EntityFramework.Services
                 throw new ArgumentNullException(nameof(order));
             }
 
+            if (!_orderContext.Orders.Any(o => o.Id == order.Id))
+            {
+                throw new EntryDoesNotExistException($"Order with id '{order.Id}' does not exist.");
+            }
+
             _orderContext.Orders.Update(order);
             _orderContext.SaveChanges();
         }
@@ -61,17 +67,17 @@ namespace OrmFundamentals.EntityFramework.Services
 
         public IEnumerable<Order> GetByMonthCreated(Month month)
         {
-            throw new NotImplementedException();
+            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByMonthCreated {month}");
         }
 
         public IEnumerable<Order> GetByYearCreated(int year)
         {
-            throw new NotImplementedException();
+            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByYearCreated {year}");
         }
 
-        public IEnumerable<Order> GetByStatus(OrderStatus status)
+        public IEnumerable<Order> GetByProduct(int productId)
         {
-            throw new NotImplementedException();
+            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByProductId {productId}");
         }
 
         protected virtual void Dispose(bool disposing)

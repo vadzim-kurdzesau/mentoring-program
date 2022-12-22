@@ -9,6 +9,6 @@ namespace OrmFundamentals.Shared
 
         IEnumerable<Order> GetByYearCreated(int year);
 
-        IEnumerable<Order> GetByStatus(OrderStatus status);
+        IEnumerable<Order> GetByProduct(int productId);
     }
 }

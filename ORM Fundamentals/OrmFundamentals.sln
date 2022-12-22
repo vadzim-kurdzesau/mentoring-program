@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrmFundamentals.EntityFrame
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrmFundamentals.Shared", "OrmFundamentals.Shared\OrmFundamentals.Shared.csproj", "{7BA1D8BF-25F1-4CD6-84AC-B4F240D28434}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "OrmFundamentals.Data", "OrmFundamentals.Data\OrmFundamentals.Data.sqlproj", "{35BB13FF-6FEC-403E-833C-BBBB138D30B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{7BA1D8BF-25F1-4CD6-84AC-B4F240D28434}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BA1D8BF-25F1-4CD6-84AC-B4F240D28434}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BA1D8BF-25F1-4CD6-84AC-B4F240D28434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BB13FF-6FEC-403E-833C-BBBB138D30B4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

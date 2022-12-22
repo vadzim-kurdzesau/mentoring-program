@@ -166,7 +166,7 @@ namespace AdoNetFundamentals.Tests
                 _orderRepository.Add(order);
             }
 
-            var actual = _orderRepository.GetByMonth(expectedMonth);
+            var actual = _orderRepository.GetByMonthCreated(expectedMonth);
 
             Assert.Equal(orders.Where(o => o.CreatedDate.Month == (int)expectedMonth), actual, new OrderComparer());
         }
@@ -193,7 +193,7 @@ namespace AdoNetFundamentals.Tests
                 _orderRepository.Add(order);
             }
 
-            var actual = _orderRepository.GetByYear(expectedYear);
+            var actual = _orderRepository.GetByYearCreated(expectedYear);
 
             Assert.Equal(orders.Where(o => o.CreatedDate.Year == expectedYear), actual, new OrderComparer());
         }
