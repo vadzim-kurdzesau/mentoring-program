@@ -61,10 +61,10 @@
     <Folder Include="dbo\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Product.sql" />
-    <Build Include="dbo\Tables\Order.sql" />
-    <Build Include="dbo\Stored Procedures\Order_GetByMonthCreated.sql" />
-    <Build Include="dbo\Stored Procedures\Order_GetByProductId.sql" />
-    <Build Include="dbo\Stored Procedures\Order_GetByYearCreated.sql" />
+    <Build Include="dbo\Tables\Orders.sql" />
+    <Build Include="dbo\Tables\Products.sql" />
+    <Build Include="dbo\Stored Procedures\Orders_GetByMonthCreated.sql" />
+    <Build Include="dbo\Stored Procedures\Orders_GetByProductId.sql" />
+    <Build Include="dbo\Stored Procedures\Orders_GetByYearCreated.sql" />
   </ItemGroup>
 </Project>

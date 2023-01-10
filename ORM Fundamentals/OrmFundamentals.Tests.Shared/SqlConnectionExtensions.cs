@@ -1,8 +1,8 @@
 ﻿using System.Data.SqlClient;
 
-namespace OrmFundamentals.EntityFramework.Tests.Utilities
+namespace OrmFundamentals.Tests.Shared
 {
-    internal static class SqlConnectionExtensions
+    public static class SqlConnectionExtensions
     {
         public static void ClearTable(this SqlConnection connection, string tableName)
         {

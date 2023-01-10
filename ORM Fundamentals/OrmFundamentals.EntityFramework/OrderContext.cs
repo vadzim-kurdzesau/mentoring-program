@@ -16,9 +16,7 @@ namespace OrmFundamentals.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>(p => p.ToTable("Product"));
-            modelBuilder.Entity<Order>(o => o.ToTable("Order")
-                .Property(o => o.Status).HasConversion<string>());
+            modelBuilder.Entity<Order>().Property(o => o.Status).HasConversion<string>();
         }
     }
 }

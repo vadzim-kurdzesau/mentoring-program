@@ -67,17 +67,17 @@ namespace OrmFundamentals.EntityFramework.Services
 
         public IEnumerable<Order> GetByMonthCreated(Month month)
         {
-            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByMonthCreated {month}");
+            return _orderContext.Orders.FromSql($"EXEC dbo.Orders_GetByMonthCreated {month}");
         }
 
         public IEnumerable<Order> GetByYearCreated(int year)
         {
-            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByYearCreated {year}");
+            return _orderContext.Orders.FromSql($"EXEC dbo.Orders_GetByYearCreated {year}");
         }
 
         public IEnumerable<Order> GetByProduct(int productId)
         {
-            return _orderContext.Orders.FromSql($"EXEC dbo.Order_GetByProductId {productId}");
+            return _orderContext.Orders.FromSql($"EXEC dbo.Orders_GetByProductId {productId}");
         }
 
         protected virtual void Dispose(bool disposing)

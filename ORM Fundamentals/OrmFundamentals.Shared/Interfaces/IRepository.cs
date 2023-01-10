@@ -24,7 +24,7 @@
         void Delete(int id);
 
         /// <summary>
-        /// Gets all <typeparamref name="T"/> from database.
+        /// Gets all <typeparamref name="T"/>s from database.
         /// </summary>
         IEnumerable<T> GetAll();
     }

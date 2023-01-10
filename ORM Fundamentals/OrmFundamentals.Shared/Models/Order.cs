@@ -1,4 +1,6 @@
-﻿namespace OrmFundamentals.Shared.Models
+﻿using Dapper.Contrib.Extensions;
+
+namespace OrmFundamentals.Shared.Models
 {
     public class Order
     {

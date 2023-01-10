@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using OrmFundamentals.EntityFramework.Services;
 using OrmFundamentals.EntityFramework.Tests.Comparers;
-using OrmFundamentals.EntityFramework.Tests.Utilities;
 using OrmFundamentals.Shared.Exceptions;
 using OrmFundamentals.Shared.Models;
 using OrmFundamentals.Shared.Services;
+using OrmFundamentals.Tests.Shared;
 
 namespace OrmFundamentals.EntityFramework.Tests
 {
@@ -23,8 +23,8 @@ namespace OrmFundamentals.EntityFramework.Tests
             _orderContext = new OrderContext(dbContextOptions);
             _orderService = new OrderService(_orderContext);
 
-            new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Order");
-            new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Product");
+            new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Orders");
+            new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Products");
         }
 
         [Fact]

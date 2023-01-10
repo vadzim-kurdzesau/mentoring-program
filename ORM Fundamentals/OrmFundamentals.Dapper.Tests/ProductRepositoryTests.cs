@@ -1,25 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OrmFundamentals.EntityFramework.Services;
-using OrmFundamentals.EntityFramework.Tests.Comparers;
+using OrmFundamentals.Shared.Comparers;
 using OrmFundamentals.Shared.Exceptions;
 using OrmFundamentals.Shared.Models;
 using OrmFundamentals.Tests.Shared;
 
-namespace OrmFundamentals.EntityFramework.Tests
+namespace OrmFundamentals.Dapper.Tests
 {
-    [Collection("OrmFundamentals.EntityFramework.Tests")] // Include to collection to run tests sequentally, not in parallel
-    public sealed class ProductServiceTests
+    [Collection("OrmFundamentals.Dapper.Tests")] // Include to collection to run tests sequentally, not in parallel
+    public class ProductRepositoryTests
     {
-        private readonly ProductService _productService;
+        private readonly ProductRepository _productRepository;
 
-        public ProductServiceTests()
+        public ProductRepositoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<OrderContext>()
-                .UseSqlServer(Constants.ConnectionString)
-                .Options;
-
-            var orderContext = new OrderContext(dbContextOptions);
-            _productService = new ProductService(orderContext);
+            _productRepository = new ProductRepository(Constants.ConnectionString);
 
             new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Orders");
             new System.Data.SqlClient.SqlConnection(Constants.ConnectionString).ClearTable("Products");
@@ -33,16 +26,16 @@ namespace OrmFundamentals.EntityFramework.Tests
                 Name = "TestProduct"
             };
 
-            _productService.Add(expected);
+            _productRepository.Add(expected);
 
-            var actual = _productService.Get(expected.Id);
+            var actual = _productRepository.Get(expected.Id);
             Assert.Equal(expected, actual, new ProductComparer());
         }
 
         [Fact]
         public void Add_ProductIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => _productService.Add(product: null));
+            Assert.Throws<ArgumentNullException>(() => _productRepository.Add(product: null));
         }
 
         [Fact]
@@ -53,25 +46,25 @@ namespace OrmFundamentals.EntityFramework.Tests
                 Name = "TestProduct"
             };
 
-            _productService.Add(expected);
+            _productRepository.Add(expected);
             expected.Description = "TestDescription";
 
-            _productService.Update(expected);
+            _productRepository.Update(expected);
 
-            var actual = _productService.Get(expected.Id);
+            var actual = _productRepository.Get(expected.Id);
             Assert.Equal(expected, actual, new ProductComparer());
         }
 
         [Fact]
         public void Update_ProductIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => _productService.Update(product: null));
+            Assert.Throws<ArgumentNullException>(() => _productRepository.Update(product: null));
         }
 
         [Fact]
         public void Update_ProductWithSpecifiedIdDoesNotExist_ThrowsEntryDoesNotExistException()
         {
-            Assert.Throws<EntryDoesNotExistException>(() => _productService.Update(new Product() { Id = int.MaxValue, Name = "TestName" }));
+            Assert.Throws<EntryDoesNotExistException>(() => _productRepository.Update(new Product() { Id = int.MaxValue, Name = "TestName" }));
         }
 
         [Fact]
@@ -82,16 +75,16 @@ namespace OrmFundamentals.EntityFramework.Tests
                 Name = "TestProduct"
             };
 
-            _productService.Add(expected);
+            _productRepository.Add(expected);
 
-            _productService.Delete(expected.Id);
-            Assert.Null(_productService.Get(expected.Id));
+            _productRepository.Delete(expected.Id);
+            Assert.Null(_productRepository.Get(expected.Id));
         }
 
         [Fact]
         public void Delete_ProductWithSpecifiedIdDoesNotExist_ThrowsEntryDoesNotExistException()
         {
-            Assert.Throws<EntryDoesNotExistException>(() => _productService.Delete(id: int.MaxValue));
+            Assert.Throws<EntryDoesNotExistException>(() => _productRepository.Delete(id: int.MaxValue));
         }
 
         [Fact]
@@ -106,10 +99,10 @@ namespace OrmFundamentals.EntityFramework.Tests
 
             foreach (var product in expected)
             {
-                _productService.Add(product);
+                _productRepository.Add(product);
             }
 
-            var actual = _productService.GetAll();
+            var actual = _productRepository.GetAll();
 
             Assert.Equal(expected, actual, new ProductComparer());
         }
